@@ -13,6 +13,5 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.issue || github.event.pull_request && github.event.comment.user.login != 'accessibility-bot' }}
     steps:
-    steps:
       - name: Check alt text
         uses: github/accessibility-alt-text-bot@main
