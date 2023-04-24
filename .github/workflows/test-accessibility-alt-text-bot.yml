@@ -16,4 +16,4 @@ jobs:
       - name: Get private action 'github/accessibility-alt-text-bot'
         uses: actions/checkout@v2
       - name: Check alt text
-        uses: ./.github/actions/github/accessibility-alt-text-bot
+        uses: ./action.yml
