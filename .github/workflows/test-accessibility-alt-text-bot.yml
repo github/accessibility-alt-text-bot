@@ -14,10 +14,4 @@ jobs:
     if: ${{ github.event.issue || github.event.pull_request && github.event.comment.user.login != 'accessibility-bot' }}
     steps:
       - name: Get private action 'github/accessibility-alt-text-bot'
-        uses: actions/checkout@v2
-        with:
-          repository: github/accessibility-alt-text-bot
-          token: ${{ secrets.GH_TOKEN }}
-          path: ./.github/actions/github/accessibility-alt-text-bot
-      - name: Check alt text
         uses: ./.github/actions/github/accessibility-alt-text-bot
