@@ -1,0 +1,15 @@
+name: Run unit tests
+on: push
+
+jobs:
+  accessibility_alt_text_bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Run test
+        shell: bash
+        run: |
+          ls
+          ./test-flag-alt-text.sh
+          

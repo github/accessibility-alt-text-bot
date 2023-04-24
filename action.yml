@@ -1,0 +1,47 @@
+name: Accessibility Alt Text Bot
+description: 'This action will check a repos issue and pr comments for correct alt text usage.'
+runs:
+  using: "composite"
+  steps:
+    - name: Runs alt text check and adds comment
+      run: |
+          source ${{ github.action_path }}/flag-alt-text.sh
+
+          if [ ${{ github.event.comment }} ]; then
+            comment=$COMMENT
+            issue=${{ github.event.issue.html_url }}
+            comment_owner=${{ github.event.comment.user.login }}
+            is_pr=${{ github.event.issue.pull_request.url != '' }}
+            target=${{ github.event.comment.html_url }}
+          elif [ ${{ github.event.issue && !github.event.comment }} ]; then
+            comment=$ISSUE_BODY
+            issue=${{ github.event.issue.html_url }}
+            comment_owner=${{ github.event.issue.user.login }}
+            is_pr=false
+            target=" your issue body"
+          elif [ ${{ github.event.pull_request && !github.event.comment }} ]; then
+            comment=$PR_BODY
+            issue=${{ github.event.pull_request.html_url }}
+            comment_owner=${{ github.event.pull_request.user.login }}
+            is_pr=true
+            target=" your pull request body"
+          fi
+          message="Uh oh! @$comment_owner, the image you shared is missing helpful alt text. Check $target.
+
+          Alt text is an invisible description that helps screen readers describe images to blind or low-vision users. If you are using markdown to display images, add your alt text inside the brackets of the markdown image.
+          
+          Learn more about alt text at [Basic writing and formatting syntax: images on GitHub Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images)."
+          flag="$(flagAltText "$comment")"
+          if [[ $flag = true ]]; then
+            if [[ $is_pr = true ]]; then
+              gh pr comment $issue --body "$message"
+            else
+              gh issue comment $issue --body "$message"
+            fi
+          fi
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        COMMENT: ${{ github.event.comment.body }}
+        ISSUE_BODY: ${{ github.event.issue.body }}
+        PR_BODY: ${{ github.event.pull_request.body }}
