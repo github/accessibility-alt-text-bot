@@ -1,4 +1,4 @@
-name: Accessibility Alt Text Bot
+name: Accessibility alt text bot
 description: 'This action will check a repos issue and pr comments for correct alt text usage.'
 runs:
   using: "composite"
