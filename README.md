@@ -4,7 +4,7 @@ An action to remind users to add alt text to their issue descriptions and commen
 
 ## How to add this action to your repo
 
-Copy this workflow into any repo you want the Accessibility-alt-text-bot to run in.
+Copy this workflow into any repo you want the accessibility-alt-text-bot to run in.
 
 ```
 name: Test Accessibility-alt-text-bot
