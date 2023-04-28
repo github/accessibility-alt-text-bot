@@ -1,5 +1,8 @@
 name: Accessibility alt text bot
 description: 'This action will check a repos issue and pr comments for correct alt text usage.'
+branding:
+  icon: 'eye'
+  color: 'purple'
 runs:
   using: "composite"
   steps:
