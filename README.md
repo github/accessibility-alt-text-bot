@@ -20,7 +20,7 @@ jobs:
   accessibility_alt_text_bot:
     name: Check alt text is set on issue or pull requests
     runs-on: ubuntu-latest
-    if: ${{ github.event.issue || github.event.pull_request && github.event.comment.user.login != 'accessibility-bot' }}
+    if: ${{ github.event.issue || github.event.pull_request }}
     steps:
       - name: Get private action 'github/accessibility-alt-text-bot'
         uses: github/accessibility-alt-text-bot
@@ -31,7 +31,7 @@ jobs:
 To ensure you stay on a stable version of this action consider locking the action to a specific version.
 
 ```       
-       uses: github/accessibility-alt-text-bot@4a94d0359143b44dab2e392616a02f88c30329df
+       uses: github/accessibility-alt-text-bot@v1.0.0
 ```    
 
 Replace the ref value with any commit hash.
