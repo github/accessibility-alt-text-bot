@@ -7,7 +7,7 @@ An action to remind users to add alt text to their issue descriptions and commen
 Copy this workflow into any repo you want the accessibility-alt-text-bot to run in.
 
 ```
-name: Test Accessibility-alt-text-bot
+name: Accessibility-alt-text-bot
 on: 
   issues:
     types: [opened, edited]
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.issue || github.event.pull_request }}
     steps:
-      - name: Get private action 'github/accessibility-alt-text-bot'
+      - name: Get action 'github/accessibility-alt-text-bot'
         uses: github/accessibility-alt-text-bot
 ```
 
