@@ -43,7 +43,7 @@ This project is licensed under the terms of the MIT open source license. Please 
 
 ## Maintainers 
 
-See [CODEOWNERS](./CODEOWNERS)
+See [CODEOWNERS](.github/CODEOWNERS).
 
 ## Support
 
