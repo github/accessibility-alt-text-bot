@@ -18,6 +18,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "kendallgassner",
+      "name": "Kendall Gassner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15275462?v=4",
+      "profile": "https://github.com/kendallgassner",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
