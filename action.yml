@@ -11,9 +11,9 @@ runs:
           source ${{ github.action_path }}/flag-alt-text.sh
 
           if [ ${{ github.event.comment }} ]; then
-            comment=$COMMENT
-            issue=${{ github.event.issue.html_url }}
-            comment_owner=${{ github.event.comment.user.login }}
+            content=$COMMENT
+            issue_url=${{ github.event.issue.html_url }}
+            user=${{ github.event.comment.user.login }}
             if ${{ github.event.issue.pull_request.url != '' }}; then
               type=pr_comment
             else
@@ -21,33 +21,33 @@ runs:
             fi
             target=${{ github.event.comment.html_url }}
           elif [ ${{ github.event.issue && !github.event.comment }} ]; then
-            comment=$ISSUE_BODY
-            issue=${{ github.event.issue.html_url }}
-            comment_owner=${{ github.event.issue.user.login }}
+            content=$ISSUE_BODY
+            issue_url=${{ github.event.issue.html_url }}
+            user=${{ github.event.issue.user.login }}
             type=issue_description
             target=" your issue body"
           elif [ ${{ github.event.pull_request && !github.event.comment }} ]; then
-            comment=$PR_BODY
-            issue=${{ github.event.pull_request.html_url }}
-            comment_owner=${{ github.event.pull_request.user.login }}
+            content=$PR_BODY
+            issue_url=${{ github.event.pull_request.html_url }}
+            user=${{ github.event.pull_request.user.login }}
             type=pr_description
             target=" your pull request body"
            elif [ ${{ github.event.discussion && !github.event.comment }} ]; then
-            comment=$DISCUSSION_BODY
+            content=$DISCUSSION_BODY
             discussion_node_id='${{ github.event.discussion.node_id }}'
-            comment_owner=${{ github.event.discussion.user.login }}
+            user=${{ github.event.discussion.user.login }}
             target='your discussion body'
             type=discussion_description
           fi
-          message="Uh oh! @$comment_owner, the image you shared is missing helpful alt text. Check $target.
+          message="Uh oh! @$user, the image you shared is missing helpful alt text. Check $target.
 
           Alt text is an invisible description that helps screen readers describe images to blind or low-vision users. If you are using markdown to display images, add your alt text inside the brackets of the markdown image.
           
           Learn more about alt text at [Basic writing and formatting syntax: images on GitHub Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images)."
-          flag="$(flagAltText "$comment")"
+          flag="$(flagAltText "$content")"
           if [[ $flag = true ]]; then
             if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
-              gh pr comment $issue --body "$message"
+              gh pr comment $issue_url --body "$message"
             elif [[ $type = discussion_description ]]; then
               gh api graphql -F discussionId="$discussion_node_id" -F body="$message" -f query='
                 mutation($discussionId: ID!, $body: String!) {
@@ -59,7 +59,7 @@ runs:
                 }
               '
             else
-              gh issue comment $issue --body "$message"
+              gh issue comment $issue_url --body "$message"
             fi
           fi
       shell: bash
