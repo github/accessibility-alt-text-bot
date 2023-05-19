@@ -16,7 +16,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/14206003?v=4",
       "profile": "https://github.com/inkblotty",
       "contributions": [
-        "ideas"
+        "ideas",
+        "a11y"
       ]
     },
     {
@@ -25,7 +26,22 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/15275462?v=4",
       "profile": "https://github.com/kendallgassner",
       "contributions": [
-        "code"
+        "code",
+        "a11y",
+        "doc",
+        "infra"
+      ]
+    },
+    {
+      "login": "khiga",
+      "name": "khiga",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7349425?v=4",
+      "profile": "https://github.com/khiga",
+      "contributions": [
+        "code",
+        "a11y",
+        "doc",
+        "infra"
       ]
     }
   ],
