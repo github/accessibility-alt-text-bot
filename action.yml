@@ -1,5 +1,5 @@
 name: Accessibility alt text bot
-description: 'This action will check a repos issue and pr comments for correct alt text usage.'
+description: 'This action will check a repos issue, discussion, or PR for correct alt text usage.'
 branding:
   icon: 'eye'
   color: 'purple'
@@ -28,6 +28,12 @@ runs:
             comment_owner=${{ github.event.pull_request.user.login }}
             is_pr=true
             target=" your pull request body"
+           elif [ ${{ github.event.discussion && !github.event.comment }} ]; then
+            comment='${{ github.event.discussion.body }}'
+            discussion_node_id='${{ github.event.discussion.node_id }}'
+            comment_owner=${{ github.event.discussion.user.login }}
+            target='your discussion description'
+            is_discussion=true
           fi
           message="Uh oh! @$comment_owner, the image you shared is missing helpful alt text. Check $target.
 
@@ -38,6 +44,16 @@ runs:
           if [[ $flag = true ]]; then
             if [[ $is_pr = true ]]; then
               gh pr comment $issue --body "$message"
+            elif [[ $is_discussion = true ]]; then
+              gh api graphql -F discussionId="$discussion_node_id" -F body="$message" -f query='
+                mutation($discussionId: ID!, $body: String!, $replyToId: ID) {
+                  addDiscussionComment(input: {discussionId: $discussionId, body: $body}) {
+                    comment {
+                      id
+                    }
+                  }
+                }
+              '
             else
               gh issue comment $issue --body "$message"
             fi
