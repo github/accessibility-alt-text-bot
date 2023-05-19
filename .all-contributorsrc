@@ -38,7 +38,10 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/16447748?v=4",
       "profile": "https://github.com/khiga8",
       "contributions": [
-        "code"
+        "code",
+        "a11y",
+        "doc",
+        "infra"
       ]
     }
   ],
