@@ -5,7 +5,9 @@ Alternative text helps convey the context of the image to those who use assistiv
 
 For guidance on setting alternative text, see [Alternative text for images on Primer](https://primer.style/design/guides/accessibility/alternative-text-for-images).
 
-Images on GitHub default to using the filename as alt text. This action flags when the alt text has not been updated from the default.
+Images on GitHub default to using the filename as alt text. This action flags when the alt text has not been updated from the default:
+
+<img width="758" alt="Screenshot of an automated actions comment on a GitHub issue that says, 'Uh oh! @monalisa, the image you shared is missing helpful alt text...' and contains instructions for setting alt text" src="https://github.com/github/accessibility-alt-text-bot/assets/16447748/c61cc9c6-f8c8-4bfb-becb-a155c2c9711d">
 
 **Note**: Ordinarily, setting `alt=""` will mark images as decorative. However, GitHub currently renders all images as a link. To avoid rendering links with no names, we recommend always setting alt text on images in GitHub.
 
