@@ -46,7 +46,7 @@ runs:
               gh pr comment $issue --body "$message"
             elif [[ $is_discussion = true ]]; then
               gh api graphql -F discussionId="$discussion_node_id" -F body="$message" -f query='
-                mutation($discussionId: ID!, $body: String!, $replyToId: ID) {
+                mutation($discussionId: ID!, $body: String!) {
                   addDiscussionComment(input: {discussionId: $discussionId, body: $body}) {
                     comment {
                       id
