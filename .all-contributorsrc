@@ -1,0 +1,25 @@
+{
+  "projectName": "accessibility-alt-text-bot",
+  "projectOwner": "kendallgassner",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "inkblotty",
+      "name": "Katie Foster",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14206003?v=4",
+      "profile": "https://github.com/inkblotty",
+      "contributions": [
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}
