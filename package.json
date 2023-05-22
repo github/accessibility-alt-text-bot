@@ -3,19 +3,21 @@
     "version": "1.0.0",
     "description": "Reminds users to write alt texts in issues and prs.",
     "main": "index.js",
-    
     "scripts": {
+        "contributors:add": "all-contributors add",
+        "contributors:generate": "all-contributors generate"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/github/accessibility-alt-text-bot.git"
+        "type": "git",
+        "url": "git+https://github.com/github/accessibility-alt-text-bot.git"
     },
     "author": "kendallgassner",
     "license": "ISC",
     "bugs": {
-      "url": "https://github.com/github/accessibility-alt-text-bot/issues"
+        "url": "https://github.com/github/accessibility-alt-text-bot/issues"
     },
     "homepage": "https://github.com/github/accessibility-alt-text-bot#readme",
-    "devDependencies": {},
-    "dependencies": {}
-  }
+    "devDependencies": {
+        "all-contributors-cli": "^6.25.1"
+    }
+}
