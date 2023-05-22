@@ -38,7 +38,7 @@ runs:
               content=$DISCUSSION_BODY
               discussion_node_id='${{ github.event.discussion.node_id }}'
               user=${{ github.event.discussion.user.login }}
-              target=' your discussion body'
+              target=" your discussion body"
             fi
           fi
           message="Uh oh! @$user, the image you shared is missing helpful alt text. Check $target.
@@ -47,9 +47,15 @@ runs:
           
           Learn more about alt text at [Basic writing and formatting syntax: images on GitHub Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images)."
           flag="$(flagAltText "$content")"
+          
+          echo $flag
+          echo $type
+
           if [[ $flag = true ]]; then
             if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
               gh pr comment $issue_url --body "$message"
+            elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
+              gh issue comment $issue_url --body "$message"
             elif [[ $type = discussion_description ]]; then
               gh api graphql -F discussionId="$discussion_node_id" -F body="$message" -f query='
                 mutation($discussionId: ID!, $body: String!) {
@@ -60,8 +66,6 @@ runs:
                   }
                 }
               '
-            else
-              gh issue comment $issue_url --body "$message"
             fi
           fi
       shell: bash
