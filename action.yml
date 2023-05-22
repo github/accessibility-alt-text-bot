@@ -20,24 +20,26 @@ runs:
               type=issue_comment
             fi
             target=${{ github.event.comment.html_url }}
-          elif [ ${{ github.event.issue && !github.event.comment }} ]; then
-            content=$ISSUE_BODY
-            issue_url=${{ github.event.issue.html_url }}
-            user=${{ github.event.issue.user.login }}
-            type=issue_description
-            target=" your issue body"
-          elif [ ${{ github.event.pull_request && !github.event.comment }} ]; then
-            content=$PR_BODY
-            issue_url=${{ github.event.pull_request.html_url }}
-            user=${{ github.event.pull_request.user.login }}
-            type=pr_description
-            target=" your pull request body"
-           elif [ ${{ github.event.discussion && !github.event.comment }} ]; then
-            content=$DISCUSSION_BODY
-            discussion_node_id='${{ github.event.discussion.node_id }}'
-            user=${{ github.event.discussion.user.login }}
-            target='your discussion body'
-            type=discussion_description
+          else
+            if [ ${{ github.event.issue }} ]; then
+              type=issue_description
+              content=$ISSUE_BODY
+              issue_url=${{ github.event.issue.html_url }}
+              user=${{ github.event.issue.user.login }}
+              target=" your issue body"
+            elif [ ${{ github.event.pull_request }} ]; then
+              type=pr_description
+              content=$PR_BODY
+              issue_url=${{ github.event.pull_request.html_url }}
+              user=${{ github.event.pull_request.user.login }}
+              target=" your pull request body"
+            elif [ ${{ github.event.discussion }} ]; then
+              type=discussion_description
+              content=$DISCUSSION_BODY
+              discussion_node_id='${{ github.event.discussion.node_id }}'
+              user=${{ github.event.discussion.user.login }}
+              target=' your discussion body'
+            fi
           fi
           message="Uh oh! @$user, the image you shared is missing helpful alt text. Check $target.
 
