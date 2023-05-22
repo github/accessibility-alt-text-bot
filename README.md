@@ -1,6 +1,6 @@
 # Accessibility-alt-text-bot
 
-This action supports accessible content sharing on GitHub by leaving an automated reminder whenever an image is shared on a GitHub Issue or Pull request without meaningful alternative text (alt text).
+This action supports accessible content sharing on GitHub by leaving an automated reminder whenever an image is shared on a GitHub Issue, Pull request, or Discussion without meaningful alternative text (alt text).
 Alternative text helps convey the context of the image to those who use assistive technologies such as a screen reader and removes accessibility barriers.
 
 For guidance on setting alternative text, see [Alternative text for images on Primer](https://primer.style/design/guides/accessibility/alternative-text-for-images).
