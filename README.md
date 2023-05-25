@@ -27,6 +27,11 @@ on:
   discussion:
     types: [created, edited]
 
+permissions:
+  issues: write
+  pull-requests: write
+  discussions: write
+  
 jobs:
   accessibility_alt_text_bot:
     name: Check alt text is set on issue or pull requests
