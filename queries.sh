@@ -24,7 +24,7 @@ function addDiscussionComment() {
 
   if [ -n "$REPLY_TO_ID" ]; then
     gh api graphql -F discussionId="$DISCUSSION_NODE_ID" -F replyToId="$REPLY_TO_ID" -F body="$MESSAGE" -f query='
-      mutation($discussionId: ID!, , $replyToId: ID, $body: String!) {
+      mutation($discussionId: ID!, $replyToId: ID, $body: String!) {
           addDiscussionComment(input: {discussionId: $discussionId, replyToId: $replyToId, body: $body}) {
           comment {
               id
