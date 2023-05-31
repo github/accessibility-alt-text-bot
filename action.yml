@@ -9,6 +9,7 @@ runs:
     - name: Runs alt text check and adds comment
       run: |
           source ${{ github.action_path }}/flag-alt-text.sh
+          source ${{ github.action_path }}/queries.sh
 
           if [ ${{ github.event.comment }} ]; then
             content=$COMMENT
@@ -19,7 +20,12 @@ runs:
             elif ${{ github.event.discussion.id != '' }}; then
               type=discussion_comment
               discussion_node_id='${{ github.event.discussion.node_id }}'
-              reply_to_id='${{ github.event.comment.node_id }}'
+              comment_node_id='${{ github.event.comment.node_id }}'
+              if ${{ github.event.comment.parent_id != '' }}; then
+                reply_to_id=$(getDiscussionReplyToId $comment_node_id)
+              else
+                reply_to_id=$comment_node_id
+              fi
             else
               type=issue_comment
               issue_url=${{ github.event.issue.html_url }}
@@ -62,25 +68,9 @@ runs:
             elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
               gh issue comment $issue_url --body "$message"
             elif [[ $type = discussion_description ]]; then
-              gh api graphql -F discussionId="$discussion_node_id" -F body="$message" -f query='
-                mutation($discussionId: ID!, $body: String!) {
-                  addDiscussionComment(input: {discussionId: $discussionId, body: $body}) {
-                    comment {
-                      id
-                    }
-                  }
-                }
-              '
+              addDiscussionComment $discussion_node_id "$message"
             elif [[ $type = discussion_comment ]]; then
-              gh api graphql -F discussionId="$discussion_node_id" -F replyToId="$reply_to_id" -F body="$message" -f query='
-                mutation($discussionId: ID!, , $replyToId: ID, $body: String!) {
-                  addDiscussionComment(input: {discussionId: $discussionId, replyToId: $replyToId, body: $body}) {
-                    comment {
-                      id
-                    }
-                  }
-                }
-              '
+              addDiscussionCommentAsReply $discussion_node_id $reply_to_id "$message"
             fi
           fi
       shell: bash
