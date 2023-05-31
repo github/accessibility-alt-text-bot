@@ -8,6 +8,8 @@ on:
     types: [created, edited]
   discussion:
     types: [created, edited]
+  discussion_comment:
+    types: [created, edited]
 
 jobs:
   accessibility_alt_text_bot:

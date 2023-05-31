@@ -26,6 +26,8 @@ on:
     types: [created, edited]
   discussion:
     types: [created, edited]
+  discussion_comment:
+    types: [created, edited]
 
 permissions:
   issues: write
