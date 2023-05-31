@@ -16,33 +16,31 @@ function getDiscussionReplyToId() {
   echo $REPLY_TO_DATA | jq -r '.data.node.replyTo.id'
 }
 
-# Given a discussion node ID and a message, adds a top-level discussion comment.
+# Given a discussion node ID, a message, and an optional reply to node ID, adds a discussion comment.
 function addDiscussionComment() {
   local DISCUSSION_NODE_ID=$1
   local MESSAGE=$2
-  gh api graphql -F discussionId="$discussion_node_id" -F body="$message" -f query='
-    mutation($discussionId: ID!, $body: String!) {
-      addDiscussionComment(input: {discussionId: $discussionId, body: $body}) {
-        comment {
-          id
-        }
-      }
-    }
-  '
-}
+  local REPLY_TO_ID=$3
 
-# Given a discussion node ID, discussion comment node ID, and a message, adds a discussion comment as a reply in thread.
-function addDiscussionCommentAsReply() {
-  local DISCUSSION_NODE_ID=$1
-  local REPLY_TO_ID=$2
-  local MESSAGE=$3
-  gh api graphql -F discussionId="$DISCUSSION_NODE_ID" -F replyToId="$REPLY_TO_ID" -F body="$MESSAGE" -f query='
-    mutation($discussionId: ID!, , $replyToId: ID, $body: String!) {
-        addDiscussionComment(input: {discussionId: $discussionId, replyToId: $replyToId, body: $body}) {
-        comment {
-            id
+  if [ -n "$REPLY_TO_ID" ]; then
+    gh api graphql -F discussionId="$DISCUSSION_NODE_ID" -F replyToId="$REPLY_TO_ID" -F body="$MESSAGE" -f query='
+      mutation($discussionId: ID!, , $replyToId: ID, $body: String!) {
+          addDiscussionComment(input: {discussionId: $discussionId, replyToId: $replyToId, body: $body}) {
+          comment {
+              id
+          }
         }
       }
-    }
-  '
+    '
+  else
+    gh api graphql -F discussionId="$discussion_node_id" -F body="$message" -f query='
+      mutation($discussionId: ID!, $body: String!) {
+        addDiscussionComment(input: {discussionId: $discussionId, body: $body}) {
+          comment {
+            id
+          }
+        }
+      }
+    '
+  fi
 }

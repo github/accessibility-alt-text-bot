@@ -70,7 +70,7 @@ runs:
             elif [[ $type = discussion_description ]]; then
               addDiscussionComment $discussion_node_id "$message"
             elif [[ $type = discussion_comment ]]; then
-              addDiscussionCommentAsReply $discussion_node_id $reply_to_id "$message"
+              addDiscussionComment $discussion_node_id "$message" $reply_to_id 
             fi
           fi
       shell: bash
