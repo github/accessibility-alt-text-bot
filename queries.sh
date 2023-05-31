@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Given a node_id for a Discussion Comment with a parent comment, return the parent comment's node ID.
+# Given a node_id for a discussion comment that is a reply in thread, return the parent comment's node ID.
 function getDiscussionReplyToId() {
   local NODE_ID=$1
   local REPLY_TO_DATA=$(gh api graphql -f query='
@@ -16,7 +16,7 @@ function getDiscussionReplyToId() {
   echo $REPLY_TO_DATA | jq -r '.data.node.replyTo.id'
 }
 
-# Adds a top-level discussion comment given a discussion node ID and a message.
+# Given a discussion node ID and a message, adds a top-level discussion comment.
 function addDiscussionComment() {
   local DISCUSSION_NODE_ID=$1
   local MESSAGE=$2
@@ -31,7 +31,7 @@ function addDiscussionComment() {
   '
 }
 
-# Adds a Discussion Comment as a reply to an existing discussion comment given a discussion node ID, discussion comment node ID, and a message.
+# Given a discussion node ID, discussion comment node ID, and a message, adds a discussion comment as a reply in thread.
 function addDiscussionCommentAsReply() {
   local DISCUSSION_NODE_ID=$1
   local REPLY_TO_ID=$2
