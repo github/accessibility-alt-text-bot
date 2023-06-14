@@ -1,19 +1,27 @@
 # Accessibility-alt-text-bot
 
-This action supports accessible content sharing on GitHub by leaving an automated reminder whenever an image is shared on a GitHub Issue, Pull request, or Discussion without meaningful alternative text (alt text).
-Alternative text helps convey the context of the image to those who use assistive technologies such as a screen reader and removes accessibility barriers.
+This action reminds users to add a meaningful alternative text to their images.
+Alternative text helps users who rely on tools like screen readers, and lowers accessibility barriers.
 
-For guidance on setting alternative text, see [Alternative text for images on Primer](https://primer.style/design/guides/accessibility/alternative-text-for-images).
+The action can check:
 
-Images on GitHub default to using the filename as alt text. This action flags when the alt text has not been updated from the default:
+- Issues
+- Pull Requests
+- Discussions
+
+To learn how to write good alternative text, read [Alternative text for images on Primer](https://primer.style/design/guides/accessibility/alternative-text-for-images).
+
+Images on GitHub default to using the filename as alt text.
+This action flags when the alt text has not been updated from the default:
 
 <img width="758" alt="Screenshot of an automated actions comment on a GitHub issue that says, 'Uh oh! @monalisa, the image you shared is missing helpful alt text...' and contains instructions for setting alt text" src="https://github.com/github/accessibility-alt-text-bot/assets/16447748/c61cc9c6-f8c8-4bfb-becb-a155c2c9711d">
 
-**Note**: Ordinarily, setting `alt=""` will mark images as decorative. However, GitHub currently renders all images as a link. To avoid rendering links with no names, we recommend always setting alt text on images in GitHub.
+> **Note**
+> Normally, setting `alt=""` marks images as decorative. But GitHub renders all images as a link. To avoid rendering links with no names, we recommend always setting alt text on images in GitHub.
 
 ## How to add this action to your repo
 
-Copy this workflow into any repo you want the accessibility-alt-text-bot to run in.
+Copy this workflow into any repo you want the `accessibility-alt-text-bot` to run in:
 
 ```yml
 name: Accessibility-alt-text-bot
@@ -46,7 +54,8 @@ jobs:
 
 ### Action stability
 
-To ensure you stay on a stable version of this action consider locking the action to a specific version.
+We recommend you pin the action to a specific version.
+This makes sure you stay on a stable version of this action.
 
 ```yml
        uses: github/accessibility-alt-text-bot@v1.2.0
@@ -56,7 +65,8 @@ Replace the ref value with any commit hash.
 
 ## License
 
-This project is licensed under the terms of the MIT open source license. Please refer to [MIT](./LICENSE.txt) for the full terms.
+This project is licensed under the terms of the MIT open source license.
+Please refer to [the MIT license file](./LICENSE.txt) for the full terms.
 
 ## Maintainers
 
