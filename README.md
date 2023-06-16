@@ -11,6 +11,8 @@ The action can check:
 
 To learn how to write good alternative text, read [Alternative text for images on Primer](https://primer.style/design/guides/accessibility/alternative-text-for-images).
 
+## Why you may need this action
+
 Images on GitHub default to using the filename as alt text.
 This action flags when the alt text has not been updated from the default:
 
@@ -52,7 +54,7 @@ jobs:
         uses: github/accessibility-alt-text-bot@v1.2.0 # Set to latest
 ```
 
-### Action stability
+### Pin the action's version for stability
 
 We recommend you pin the action to a specific version.
 This makes sure you stay on a stable version of this action.
@@ -66,7 +68,7 @@ Replace the ref value with any commit hash.
 ## License
 
 This project is licensed under the terms of the MIT open source license.
-Please refer to [the MIT license file](./LICENSE.txt) for the full terms.
+Please read [the MIT license file](./LICENSE.txt) for the full terms.
 
 ## Maintainers
 
@@ -78,7 +80,7 @@ TODO: Be explicit about support expectations.
 
 ## Acknowledgement
 
-Please read [Contributing Guide](./CONTRIBUTING.md) for more information.
+Please read our [Contributing Guide](./CONTRIBUTING.md) for more information.
 
 ## Contributors ✨
 
@@ -102,4 +104,5 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
+Contributions of any kind welcome!
