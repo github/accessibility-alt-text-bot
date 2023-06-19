@@ -43,6 +43,15 @@
         "doc",
         "infra"
       ]
+    },
+    {
+      "login": "HonkingGoose",
+      "name": "HonkingGoose",
+      "avatar_url": "https://avatars.githubusercontent.com/u/34918129?v=4",
+      "profile": "https://github.com/HonkingGoose",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
