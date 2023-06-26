@@ -5,9 +5,12 @@ Alternative text helps users who rely on tools like screen readers, and lowers a
 
 The action can check:
 
-- Issues
-- Pull Requests
-- Discussions
+- Issue comments
+- Issue descriptions
+- Pull Request comments
+- Pull Request descriptions
+- Discussion comments
+- Discussion descriptions
 
 To learn how to write good alternative text, read [Alternative text for images on Primer](https://primer.style/design/guides/accessibility/alternative-text-for-images).
 
