@@ -48,17 +48,16 @@ echo "******Expecting true:*******"
 for i in "${should_be_true[@]}"; do
     echo "Testing: $i"
     assert_true "$(flagAltText "$i")" "$i must be true"
-    # if [ $? == 1 ]; then
-    #     exit 1
-    # fi
-
+    if [ $? == 1 ]; then
+        exit 1
+    fi
 done
 
 echo "******Expecting false:*******"
 for i in "${should_be_false[@]}"; do
     echo "Testing: $i"
     assert_false "$(flagAltText "$i")" "$i must be false"
-    # if [ $? == 1 ]; then
-    #     exit 1
-    # fi
+    if [ $? == 1 ]; then
+        exit 1
+    fi
 done
