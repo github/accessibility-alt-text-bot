@@ -59,8 +59,8 @@ runs:
           Learn more about alt text at [Basic writing and formatting syntax: images on GitHub Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images)."
           flag="$(flagAltText "$content")"
           
-          echo $flag
-          echo $type
+          echo "Detected bad alt text: ${flag}"
+          echo "Event type: $type"
 
           if [[ $flag = true ]]; then
             if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
