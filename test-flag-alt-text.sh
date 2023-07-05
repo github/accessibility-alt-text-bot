@@ -22,10 +22,9 @@ declare -a should_be_true=(
     '<img alt="image" src="cat.png">'
     '<img alt="" src="cat.png">'
     "<img alt='' src='cat.png'>"
-    # TODO: add flag for these cases
-    # "<img src="cat.png">"
-    # '<img alt src="cat.png">'
-    # '<img src="cat.png" width="10px">'
+    "<img src="cat.png">"
+    '<img alt src="cat.png">'
+    '<img src="cat.png" width="10px">'
     '<img alt="Screen shot 2020-01-01 at 12.00.00.png" src="cat.png">'
     '<img alt="Screen Shot 2020-01-01 at 12.00.00.png" src="cat.png">'
     '<img alt="Screenshot 2020-01-01 at 12.00.00.png" src="cat.png">'
