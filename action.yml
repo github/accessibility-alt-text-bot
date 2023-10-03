@@ -1,78 +1,79 @@
 name: Accessibility alt text bot
-description: 'This action will check a repos issue, discussion, or PR for correct alt text usage.'
+description: "This action will check a repos issue, discussion, or PR for correct alt text usage."
 branding:
-  icon: 'eye'
-  color: 'purple'
+  icon: "eye"
+  color: "purple"
 runs:
   using: "composite"
   steps:
     - name: Runs alt text check and adds comment
       run: |
-          source ${{ github.action_path }}/flag-alt-text.sh
-          source ${{ github.action_path }}/queries.sh
+        source ${{ github.action_path }}/flag-alt-text.sh
+        source ${{ github.action_path }}/queries.sh
 
-          if [ ${{ github.event.comment }} ]; then
-            content=$COMMENT
-            user=${{ github.event.comment.user.login }}
-            if ${{ github.event.issue.pull_request.url != '' }}; then
-              type=pr_comment
-              issue_url=${{ github.event.issue.html_url }}
-            elif ${{ github.event.discussion.id != '' }}; then
-              type=discussion_comment
-              discussion_node_id='${{ github.event.discussion.node_id }}'
-              comment_node_id='${{ github.event.comment.node_id }}'
-              if ${{ github.event.comment.parent_id != '' }}; then
-                reply_to_id=$(getDiscussionReplyToId $comment_node_id)
-              else
-                reply_to_id=$comment_node_id
-              fi
+        if [ ${{ github.event.comment }} ]; then
+          content=$COMMENT
+          user=${{ github.event.comment.user.login }}
+          if ${{ github.event.issue.pull_request.url != '' }}; then
+            type=pr_comment
+            issue_url=${{ github.event.issue.html_url }}
+          elif ${{ github.event.discussion.id != '' }}; then
+            type=discussion_comment
+            discussion_node_id='${{ github.event.discussion.node_id }}'
+            comment_node_id='${{ github.event.comment.node_id }}'
+            if ${{ github.event.comment.parent_id != '' }}; then
+              reply_to_id=$(getDiscussionReplyToId $comment_node_id)
             else
-              type=issue_comment
-              issue_url=${{ github.event.issue.html_url }}
+              reply_to_id=$comment_node_id
             fi
-            target=${{ github.event.comment.html_url }}
           else
-            if [ ${{ github.event.issue }} ]; then
-              type=issue_description
-              content=$ISSUE_BODY
-              issue_url=${{ github.event.issue.html_url }}
-              user=${{ github.event.issue.user.login }}
-              target=" your issue body"
-            elif [ ${{ github.event.pull_request }} ]; then
-              type=pr_description
-              content=$PR_BODY
-              issue_url=${{ github.event.pull_request.html_url }}
-              user=${{ github.event.pull_request.user.login }}
-              target=" your pull request body"
-            elif [ ${{ github.event.discussion }} ]; then
-              type=discussion_description
-              content=$DISCUSSION_BODY
-              discussion_node_id='${{ github.event.discussion.node_id }}'
-              user=${{ github.event.discussion.user.login }}
-              target=" your discussion body"
-            fi
+            type=issue_comment
+            issue_url=${{ github.event.issue.html_url }}
           fi
-          message="Uh oh! @$user, the image you shared is missing helpful alt text. Check $target.
-
-          Alt text is an invisible description that helps screen readers describe images to blind or low-vision users. If you are using markdown to display images, add your alt text inside the brackets of the markdown image.
-          
-          Learn more about alt text at [Basic writing and formatting syntax: images on GitHub Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images)."
-          flag="$(flagAltText "$content")"
-          
-          echo "Detected bad alt text: ${flag}"
-          echo "Event type: $type"
-
-          if [[ $flag = true ]]; then
-            if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
-              gh pr comment $issue_url --body "$message"
-            elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
-              gh issue comment $issue_url --body "$message"
-            elif [[ $type = discussion_description ]]; then
-              addDiscussionComment $discussion_node_id "$message"
-            elif [[ $type = discussion_comment ]]; then
-              addDiscussionComment $discussion_node_id "$message" $reply_to_id 
-            fi
+          target=${{ github.event.comment.html_url }}
+        else
+          if [ ${{ github.event.issue }} ]; then
+            type=issue_description
+            content=$ISSUE_BODY
+            issue_url=${{ github.event.issue.html_url }}
+            user=${{ github.event.issue.user.login }}
+            target=" your issue body"
+          elif [ ${{ github.event.pull_request }} ]; then
+            type=pr_description
+            content=$PR_BODY
+            issue_url=${{ github.event.pull_request.html_url }}
+            user=${{ github.event.pull_request.user.login }}
+            target=" your pull request body"
+          elif [ ${{ github.event.discussion }} ]; then
+            type=discussion_description
+            content=$DISCUSSION_BODY
+            discussion_node_id='${{ github.event.discussion.node_id }}'
+            user=${{ github.event.discussion.user.login }}
+            target=" your discussion body"
           fi
+        fi
+        npm ci
+        flag=$(node index.js "$content") 
+        message="Uh oh! @$user, the image you shared is missing helpful alt text. Check $target.
+
+        Alt text is an invisible description that helps screen readers describe images to blind or low-vision users. If you are using markdown to display images, add your alt text inside the brackets of the markdown image.
+
+        Learn more about alt text at [Basic writing and formatting syntax: images on GitHub Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images)."
+
+        echo "Detected bad alt text: ${flag}"
+        echo "Event type: $type"
+
+        if [[ $flag = true ]]; then
+          if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
+            gh pr comment $issue_url --body "$message"
+          elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
+            gh issue comment $issue_url --body "$message"
+          elif [[ $type = discussion_description ]]; then
+            addDiscussionComment $discussion_node_id "$message"
+          elif [[ $type = discussion_comment ]]; then
+            addDiscussionComment $discussion_node_id "$message" $reply_to_id 
+          fi
+        fi
       shell: bash
       env:
         GITHUB_TOKEN: ${{ github.token }}
