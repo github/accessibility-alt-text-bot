@@ -24,6 +24,8 @@
         "jest": "^29.7.0"
     },
     "dependencies": {
+        "@github/markdownlint-github": "^0.4.1",
+        "markdownlint": "^0.31.1",
         "remark": "^15.0.1",
         "unified-lint-rule": "^2.1.2",
         "unist-util-generated": "^3.0.0",
