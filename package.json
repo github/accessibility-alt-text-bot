@@ -25,11 +25,6 @@
     },
     "dependencies": {
         "@github/markdownlint-github": "^0.4.1",
-        "markdownlint": "^0.31.1",
-        "remark": "^15.0.1",
-        "unified-lint-rule": "^2.1.2",
-        "unist-util-generated": "^3.0.0",
-        "unist-util-visit": "^5.0.0",
-        "vfile-reporter": "^8.1.0"
+        "markdownlint": "^0.31.1"
     }
 }

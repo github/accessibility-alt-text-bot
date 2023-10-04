@@ -17,16 +17,14 @@ export const validate = (markdown) =>
       strings: {
         content: markdown,
       },
-      config: markdownlintGitHub.init({
+      config: {
         default: false,
         "no-default-alt-text": true,
         "no-alt-text": true,
-        "no-generic-link-text": false,
-      }),
+      },
       handleRuleFailures: true,
       customRules: markdownlintGitHub,
     })
     .content?.map((error) => {
-      // console.log(`warning: ${error.ruleDescription}`);
       return error.ruleDescription;
     }) ?? [];
