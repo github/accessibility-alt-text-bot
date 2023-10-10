@@ -11,6 +11,7 @@ export const validate = (markdown) =>
         default: false,
         "no-default-alt-text": true,
         "no-alt-text": true,
+        "no-empty-alt-text": true,
       },
       handleRuleFailures: true,
       customRules: markdownlintGitHub,

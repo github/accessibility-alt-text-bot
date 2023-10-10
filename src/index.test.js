@@ -3,7 +3,6 @@ import { validate } from "./validate.js";
 test("no-alt-text: should return errors", async () => {
   let result = await validate("![]()");
   expect(result[0]).toBe("Images should have alternate text (alt text)");
-  // expect(result[0]).toBe("Images should have alternate text (alt text)");
   // result = await validate('<img src="cat.png">');
   // expect(result[0]).toBe("Images should have alternate text (alt text)");
   // result = await validate('<img alt src="cat.png">');
@@ -57,14 +56,14 @@ test("no-default-alt-text: should return errors", async () => {
   expect(result[0]).toBe(
     "Images should have meaningful alternative text (alt text)"
   );
-  // result = await validate('<img alt="" src="cat.png">');
-  // expect(result[0]).toBe(
-  //   "Images should have meaningful alternative text (alt text)"
-  // );
-  // result = await validate("<img alt='' src='cat.png'>");
-  // expect(result[0]).toBe(
-  //   "Images should have meaningful alternative text (alt text)"
-  // );
+  result = await validate('<img alt="" src="cat.png">');
+  expect(result[0]).toBe(
+    "Please provide an alternative text for the image."
+  );
+  result = await validate("<img alt='' src='cat.png'>");
+  expect(result[0]).toBe(
+    "Please provide an alternative text for the image."
+  );
   result = await validate(
     '<img alt="Screen shot 2020-01-01 at 12.00.00.png" src="cat.png">'
   );
@@ -119,10 +118,10 @@ test("no-default-alt-text: should not return errors", async () => {
   expect(result.length).toBe(0);
   result = await validate('<img alt="Mona Lisa, the Octocat" src="cat.png">');
   expect(result.length).toBe(0);
-  // result = await validate(
-  //   '```<img alt="CleanShot 2020-01-01 @12x" src="cat.png">```'
-  // );
-  // expect(result.length).toBe(0);
-  // result = await validate("```![Image]()```");
-  //expect(result.length).toBe(0);
+  result = await validate(
+    '```<img alt="CleanShot 2020-01-01 @12x" src="cat.png">```'
+  );
+  expect(result.length).toBe(0);
+  result = await validate("```![Image]()```");
+  expect(result.length).toBe(0);
 });
