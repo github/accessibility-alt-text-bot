@@ -51,7 +51,7 @@ runs:
             target=" your discussion body"
           fi
         fi
-        flag=$(node index.js "$content") 
+        flag=$(node ./index.js "$content") 
         message="Uh oh! @$user, the image you shared is missing helpful alt text. Check $target.
 
         Alt text is an invisible description that helps screen readers describe images to blind or low-vision users. If you are using markdown to display images, add your alt text inside the brackets of the markdown image.
