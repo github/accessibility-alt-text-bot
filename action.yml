@@ -8,7 +8,6 @@ runs:
   steps:
     - name: Runs alt text check and adds comment
       run: |
-        source ${{ github.action_path }}/flag-alt-text.sh
         source ${{ github.action_path }}/queries.sh
 
         if [ ${{ github.event.comment }} ]; then
