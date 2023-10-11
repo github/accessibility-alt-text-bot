@@ -51,7 +51,6 @@ runs:
             target=" your discussion body"
           fi
         fi
-        npm i
         flag=$(node index.js "$content") 
         message="Uh oh! @$user, the image you shared is missing helpful alt text. Check $target.
 
