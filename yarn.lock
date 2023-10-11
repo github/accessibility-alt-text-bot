@@ -304,10 +304,10 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@github/markdownlint-github@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.npmjs.org/@github/markdownlint-github/-/markdownlint-github-0.5.0.tgz"
-  integrity sha512-m8a7xklDJv8+C5hpaeYE2Jb0IEBwT7fwZpEH3uhYmlcpggRoo0kcnfedB0vUkPfM6Ip7AZgoC3G1SwS/ihadZQ==
+"@github/markdownlint-github@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.npmjs.org/@github/markdownlint-github/-/markdownlint-github-0.6.0.tgz"
+  integrity sha512-THR2p9AExA1lxLoBIJnmFg8VGOCMDNcQDxA6O/JvSyL4ODqGrqozbMsH4xCE19+7Li+NeqwqJEdmmVas5LjT1A==
   dependencies:
     lodash "^4.17.15"
 

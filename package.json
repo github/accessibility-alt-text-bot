@@ -24,7 +24,7 @@
         "jest": "^29.7.0"
     },
     "dependencies": {
-        "@github/markdownlint-github": "^0.5.0",
+        "@github/markdownlint-github": "^0.6.0",
         "markdownlint": "^0.31.1"
     }
-}
+} 
