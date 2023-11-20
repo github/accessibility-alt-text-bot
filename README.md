@@ -21,7 +21,7 @@ This action flags when the alt text has not been updated from the default:
 
 <img width="758" alt="Screenshot of an automated actions comment on a GitHub issue that says, 'Uh oh! @monalisa, the image you shared is missing helpful alt text...' and contains instructions for setting alt text" src="https://github.com/github/accessibility-alt-text-bot/assets/16447748/c61cc9c6-f8c8-4bfb-becb-a155c2c9711d">
 
-> **Note**
+> [!TIP]
 > Normally, setting `alt=""` marks images as decorative. But GitHub renders all images as a link. To avoid rendering links with no names, we recommend always setting alt text on images in GitHub.
 
 ## How to add this action to your repo
