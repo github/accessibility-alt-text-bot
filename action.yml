@@ -56,7 +56,10 @@ runs:
 
         Alt text is an invisible description that helps screen readers describe images to blind or low-vision users. If you are using markdown to display images, add your alt text inside the brackets of the markdown image.
 
-        Learn more about alt text at [Basic writing and formatting syntax: images on GitHub Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images)."
+        Learn more about alt text at [Basic writing and formatting syntax: images on GitHub Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images).
+
+        > 🤖 Beep boop! This comment was added automatically by [github/accessibility-alt-text-bot](https://github.com/github/accessibility-alt-text-bot).
+        "
 
         echo "Detected bad alt text: ${flag}"
         echo "Event type: $type"
