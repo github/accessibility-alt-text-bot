@@ -32,6 +32,10 @@ test("no-default-alt-text: should return errors", async () => {
   expect(result[0]).toBe(
     "Images should have meaningful alternative text (alt text)"
   );
+  result = await validate("![Screencast 2020-01-01 at 12.00.00.png]()");
+  expect(result[0]).toBe(
+    "Images should have meaningful alternative text (alt text)"
+  );
   result = await validate("![image]()");
   expect(result[0]).toBe(
     "Images should have meaningful alternative text (alt text)"
@@ -84,6 +88,10 @@ test("no-default-alt-text: should return errors", async () => {
   );
   result = await validate(
     '<img alt="CleanShot 2020-01-01 @12x" src="cat.png">'
+  );
+  result = await validate('<img alt="Screencast 2020-01-01 @12x" src="cat.png">');
+  expect(result[0]).toBe(
+    "Images should have meaningful alternative text (alt text)"
   );
   expect(result[0]).toBe(
     "Images should have meaningful alternative text (alt text)"
