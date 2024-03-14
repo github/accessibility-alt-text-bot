@@ -1,6 +1,6 @@
 # uc.micro
 
-[![Build Status](https://img.shields.io/travis/markdown-it/uc.micro/master.svg?style=flat)](https://travis-ci.org/markdown-it/uc.micro)
+[![CI](https://github.com/markdown-it/uc.micro/actions/workflows/ci.yml/badge.svg)](https://github.com/markdown-it/uc.micro/actions/workflows/ci.yml)
 [![NPM version](https://img.shields.io/npm/v/uc.micro.svg?style=flat)](https://www.npmjs.org/package/uc.micro)
 
 > Micro subset of unicode data files for [markdown-it](https://github.com/markdown-it) projects.
