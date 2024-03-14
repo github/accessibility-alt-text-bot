@@ -4,11 +4,11 @@ test("no-alt-text: should return errors", async () => {
   let result = await validate("![]()");
   expect(result[0]).toBe("Images should have alternate text (alt text)");
   result = await validate('<img src="cat.png">');
-  expect(result[0]).toBe("Please provide an alternative text for the image.");
+  expect(result[0]).toBe("Images should have alternate text (alt text)");
   result = await validate('<img alt src="cat.png">');
-  expect(result[0]).toBe("Please provide an alternative text for the image.");
+  expect(result[0]).toBe("Images should have alternate text (alt text)");
   result = await validate('<img src="cat.png" width="10px">');
-  expect(result[0]).toBe("Please provide an alternative text for the image.");
+  expect(result[0]).toBe("Images should have alternate text (alt text)");
 });
 test("no-default-alt-text: should return errors", async () => {
   let result = await validate("![Cleanshot 2020-01-01 at 12.00.00.png]()");
