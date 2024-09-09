@@ -19,3 +19,8 @@ jobs:
     steps:
       - name: Check alt text
         uses: github/accessibility-alt-text-bot@main
+permissions:
+  contents: read
+  pull-requests: write
+  discussions: write
+  issues: write
