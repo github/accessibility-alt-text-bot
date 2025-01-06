@@ -36,11 +36,11 @@ on:
   pull_request:
     types: [opened, edited]
   issue_comment:
-    types: [created, edited]
+    types: [created, edited, deleted]
   discussion:
     types: [created, edited]
   discussion_comment:
-    types: [created, edited]
+    types: [created, edited, deleted]
 
 permissions:
   issues: write

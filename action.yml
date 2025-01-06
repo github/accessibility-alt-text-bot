@@ -74,9 +74,7 @@ runs:
         "
 
         echo "Detected bad alt text: ${flag}"
-        echo ${{github.event_name}}
         echo "Event type: $type"
-        echo ${{ github.event.action }}
         if [[ $flag && ${{ github.event.action }} != 'deleted' ]]; then
           if [ $bot_comment_id ]; then
             if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
