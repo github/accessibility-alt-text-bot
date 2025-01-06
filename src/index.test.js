@@ -2,7 +2,6 @@ import { validate } from "./validate.js";
 
 test("no-alt-text: should return errors", async () => {
   let result = await validate("![]()");
-  console.log(result)
   expect(result).toBe("- Images should have alternate text (alt text) at line 1");
   result = await validate('<img src="cat.png">');
   expect(result).toBe("- Images should have alternate text (alt text) at line 1");
