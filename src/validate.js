@@ -1,8 +1,8 @@
 import markdownlint from "markdownlint";
 import markdownlintGitHub from "@github/markdownlint-github";
 
-export const validate = (markdown) =>
-  markdownlint
+export const validate = (markdown) => 
+  (markdownlint
     .sync({
       strings: {
         content: markdown,
@@ -17,5 +17,5 @@ export const validate = (markdown) =>
       customRules: markdownlintGitHub,
     })
     .content?.map((error) => {
-      return error.ruleDescription;
-    }) ?? [];
+      return  `- ${error.ruleDescription} at line ${error.lineNumber}`;
+    }) ?? []).join("\n");

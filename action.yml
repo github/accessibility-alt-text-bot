@@ -13,13 +13,16 @@ runs:
         if [ ${{ github.event.comment }} ]; then
           content=$COMMENT
           user=${{ github.event.comment.user.login }}
+          target_id=${{ github.event.comment.id }}
           if ${{ github.event.issue.pull_request.url != '' }}; then
             type=pr_comment
             issue_url=${{ github.event.issue.html_url }}
+            bot_comment_id=$(gh api repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments | jq -r '.[] | select(.user.login == "github-actions[bot]") | select(.body | test("<div alt-text-bot-id=\"${{ github.event.comment.id }}\"")) | .id')
           elif ${{ github.event.discussion.id != '' }}; then
             type=discussion_comment
             discussion_node_id='${{ github.event.discussion.node_id }}'
             comment_node_id='${{ github.event.comment.node_id }}'
+            bot_comment_id=$(gh api repos/${{ github.repository }}/discussions/${{ github.event.discussion.number }}/comments | jq -r '.[] | select(.user.login == "github-actions[bot]") | select(.body | test("<div alt-text-bot-id=\"${{ github.event.comment.id }}\"")) | .node_id')
             if ${{ github.event.comment.parent_id != '' }}; then
               reply_to_id=$(getDiscussionReplyToId $comment_node_id)
             else
@@ -28,6 +31,7 @@ runs:
           else
             type=issue_comment
             issue_url=${{ github.event.issue.html_url }}
+            bot_comment_id=$(gh api repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments | jq -r '.[] | select(.user.login == "github-actions[bot]") |  select(.body | test("<div alt-text-bot-id=\"${{ github.event.comment.id }}\"")) | .id')
           fi
           target=${{ github.event.comment.html_url }}
         else
@@ -36,23 +40,31 @@ runs:
             content=$ISSUE_BODY
             issue_url=${{ github.event.issue.html_url }}
             user=${{ github.event.issue.user.login }}
-            target=" your issue body"
+            target="your issue body"
+            target_id=${{ github.event.issue.id }}
+            bot_comment_id=$(gh api repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments | jq -r '.[] | select(.user.login == "github-actions[bot]") | select(.body | test("<div alt-text-bot-id=\"${{ github.event.issue.id }}\"")) | .id')
           elif [ ${{ github.event.pull_request }} ]; then
             type=pr_description
             content=$PR_BODY
             issue_url=${{ github.event.pull_request.html_url }}
             user=${{ github.event.pull_request.user.login }}
-            target=" your pull request body"
+            target="your pull request body"
+            target_id=${{ github.event.pull_request.id }}
+            bot_comment_id=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments | jq -r '.[] | select(.user.login == "github-actions[bot]") | select(.body | test("<div alt-text-bot-id=\"${{ github.event.pull_request.id }}\"")) | .id')
           elif [ ${{ github.event.discussion }} ]; then
             type=discussion_description
             content=$DISCUSSION_BODY
             discussion_node_id='${{ github.event.discussion.node_id }}'
             user=${{ github.event.discussion.user.login }}
-            target=" your discussion body"
+            target="your discussion body"
+            target_id=${{ github.event.discussion.id }}
+            bot_comment_id=$(gh api repos/${{ github.repository }}/discussions/${{ github.event.discussion.number }}/comments | jq -r '.[] | select(.user.login == "github-actions[bot]") | select(.body | test("<div alt-text-bot-id=\"${{ github.event.discussion.id }}\"")) | .node_id')
           fi
         fi
-        flag=$(node ${{ github.action_path }}/src/index.js "$content") 
-        message="Uh oh! @$user, the image you shared is missing helpful alt text. Check $target.
+        flag=$(node ${{ github.action_path }}/src/index.js "$content")
+        message="<div alt-text-bot-id=\"$target_id\" /> Uh oh! @$user, at least one image you shared is missing helpful alt text. Check $target to fix the following violations:
+
+        $flag 
 
         Alt text is an invisible description that helps screen readers describe images to blind or low-vision users. If you are using markdown to display images, add your alt text inside the brackets of the markdown image.
 
@@ -63,16 +75,37 @@ runs:
 
         echo "Detected bad alt text: ${flag}"
         echo "Event type: $type"
-
-        if [[ $flag = true ]]; then
-          if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
-            gh pr comment $issue_url --body "$message"
-          elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
-            gh issue comment $issue_url --body "$message"
-          elif [[ $type = discussion_description ]]; then
-            addDiscussionComment $discussion_node_id "$message"
-          elif [[ $type = discussion_comment ]]; then
-            addDiscussionComment $discussion_node_id "$message" $reply_to_id 
+        if [[ $flag && ${{ github.event.action }} != 'deleted' ]]; then
+          if [ $bot_comment_id ]; then
+            if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
+              gh api repos/${{ github.repository }}/issues/comments/$bot_comment_id -X PATCH -f body="$message"
+            elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
+              gh api repos/${{ github.repository }}/issues/comments/$bot_comment_id -X PATCH -f body="$message"
+            elif [[ $type = discussion_description ]] || [[ $type = discussion_comment ]]; then
+              gh api graphql -f  query='mutation($commentId: ID!, $body: String!) { updateDiscussionComment(input: {commentId: $commentId, body: $body}) { comment { id body }}}' -f commentId=$bot_comment_id -f body="$message"
+            fi
+          else 
+            if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
+              gh pr comment $issue_url --body "$message"
+            elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
+              gh issue comment $issue_url --body "$message"
+            elif [[ $type = discussion_description ]]; then
+              addDiscussionComment $discussion_node_id "$message"
+            elif [[ $type = discussion_comment ]]; then
+              addDiscussionComment $discussion_node_id "$message" $reply_to_id 
+            fi
+          fi
+        else 
+          echo "bot_comment_id: $bot_comment_id"
+          if [ $bot_comment_id ]; then
+            echo "Deleting bot comment..."
+            if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
+                gh api -X DELETE /repos/${{ github.repository }}/issues/comments/$bot_comment_id
+            elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
+                gh api -X DELETE /repos/${{ github.repository }}/issues/comments/$bot_comment_id
+            elif [[ $type = discussion_description ]] || [[ $type = discussion_comment ]]; then
+                gh api graphql -f  query='mutation($id: ID!) { deleteDiscussionComment(input: {id: $id}) { clientMutationId } }' -f id=$bot_comment_id 
+            fi
           fi
         fi
       shell: bash
