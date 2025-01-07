@@ -1,4 +1,4 @@
-# Accessibility-alt-text-bot
+# Accessibility-alt-text-bot 
 
 This action reminds users to add a meaningful alternative text to their images.
 Alternative text helps users who rely on tools like screen readers, and lowers accessibility barriers.
