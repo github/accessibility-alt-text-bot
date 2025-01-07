@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get action 'github/accessibility-alt-text-bot'
-        uses: github/accessibility-alt-text-bot@v1.4.0 # Set to latest
+        uses: github/accessibility-alt-text-bot@v1.6.0 # Set to latest
 ```
 
 ### Pin the action's version for stability
@@ -62,7 +62,7 @@ We recommend you pin the action to a specific version.
 This makes sure you stay on a stable version of this action.
 
 ```yml
-       uses: github/accessibility-alt-text-bot@v1.4.0
+       uses: github/accessibility-alt-text-bot@v1.6.0
 ```
 
 Replace the ref value with any commit hash.
