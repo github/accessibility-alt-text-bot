@@ -61,7 +61,7 @@ runs:
             bot_comment_id=$(gh api repos/${{ github.repository }}/discussions/${{ github.event.discussion.number }}/comments | jq -r '.[] | select(.user.login == "github-actions[bot]") | select(.body | test("<div alt-text-bot-id=\"${{ github.event.discussion.id }}\"")) | .node_id')
           fi
         fi
-        flag=$(node ${{ github.action_path }}/src/index.js "$content")
+        flag=$(node ${{ github.action_path }}/src/index.js "$content" "$CONFIG")
         message="<div alt-text-bot-id=\"$target_id\" /> Uh oh! @$user, at least one image you shared is missing helpful alt text. Check $target to fix the following violations:
 
         $flag 
@@ -115,3 +115,4 @@ runs:
         ISSUE_BODY: ${{ github.event.issue.body }}
         PR_BODY: ${{ github.event.pull_request.body }}
         DISCUSSION_BODY: ${{ github.event.discussion.body }}
+        CONFIG: ${{ inputs.config }}

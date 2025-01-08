@@ -67,6 +67,22 @@ This makes sure you stay on a stable version of this action.
 
 Replace the ref value with any commit hash.
 
+### Adding a custom linting configuration
+
+If you would like to include more linting rules from the [markdownlint](https://github.com/DavidAnson/markdownlint) or [markdownlint-github](https://github.com/github/markdownlint-github) rulesets pass a config object to the `github/accessibility-alt-text-bot` action.
+
+```yml
+    steps:
+      - name: Check alt text  #change this step to use the
+        uses: github/accessibility-alt-text-bot@v1.6.0
+        with:
+          config: |
+            no-default-alt-text: true,
+            no-alt-text: true,
+            no-empty-alt-text: true,
+            no-generic-link-text: true,
+```
+
 ## License
 
 This project is licensed under the terms of the MIT open source license.
