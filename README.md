@@ -67,9 +67,14 @@ This makes sure you stay on a stable version of this action.
 
 Replace the ref value with any commit hash.
 
-### Adding a custom linting configuration
+### Experimental: Adding a custom linting configuration
 
-If you would like to include more linting rules from the [markdownlint](https://github.com/DavidAnson/markdownlint) or [markdownlint-github](https://github.com/github/markdownlint-github) rulesets pass a config object to the `github/accessibility-alt-text-bot` action.
+If you would like to include more linting rules from the [markdownlint](https://github.com/DavidAnson/markdownlint) or [markdownlint-github](https://github.com/github/markdownlint-github) rulesets pass a `config` object to the `github/accessibility-alt-text-bot` action.
+
+
+ ⚠ Consider adding new rules sparingly, as excessive rules could make the bot too noisy and make it too hard for users to fixes. 
+
+ ⚠ This feature is marked experimental and may be removed in the future. We acknowledge that some repositories may want to implement more accessibility checks and aim to evaluate how users this feature before making it generally available.
 
 ```yml
     steps:
