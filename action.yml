@@ -3,6 +3,10 @@ description: "This action will check a repos issue, discussion, or PR for correc
 branding:
   icon: "eye"
   color: "purple"
+inputs:
+  config:
+    description: "A custom linting configuration"
+    required: false
 runs:
   using: "composite"
   steps:
@@ -61,7 +65,16 @@ runs:
             bot_comment_id=$(gh api repos/${{ github.repository }}/discussions/${{ github.event.discussion.number }}/comments | jq -r '.[] | select(.user.login == "github-actions[bot]") | select(.body | test("<div alt-text-bot-id=\"${{ github.event.discussion.id }}\"")) | .node_id')
           fi
         fi
+   
         flag=$(node ${{ github.action_path }}/src/index.js "$content" "$CONFIG")
+
+        custom_config_message="<div alt-text-bot-id=\"$target_id\" /> Uh oh! @$user, your markdown has a few linting errors. Check $target to fix the following violations:
+
+        $flag 
+
+        > 🤖 Beep boop! This comment was added automatically by [github/accessibility-alt-text-bot](https://github.com/github/accessibility-alt-text-bot).
+        "
+        
         message="<div alt-text-bot-id=\"$target_id\" /> Uh oh! @$user, at least one image you shared is missing helpful alt text. Check $target to fix the following violations:
 
         $flag 
@@ -73,7 +86,12 @@ runs:
         > 🤖 Beep boop! This comment was added automatically by [github/accessibility-alt-text-bot](https://github.com/github/accessibility-alt-text-bot).
         "
 
-        echo "Detected bad alt text: ${flag}"
+        echo "Config: $CONFIG"
+        if [ "$CONFIG" ]; then
+          message=$custom_config_message 
+        fi
+
+        echo "Detected errors: ${flag}"
         echo "Event type: $type"
         if [[ $flag && ${{ github.event.action }} != 'deleted' ]]; then
           if [ $bot_comment_id ]; then
