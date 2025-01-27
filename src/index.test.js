@@ -98,8 +98,28 @@ test("no-default-alt-text: should return errors", async () => {
   );
 });
 
+
+test("no-generic-link-text: should return errors", async () => {
+  const config = `
+  no-default-alt-text: true,
+  no-alt-text: true,
+  no-empty-alt-text: true,
+  no-generic-link-text: true,`
+
+  // default configuration does not check for improper links
+  const result = await validate("[Learn more](https://docs.github.com)", config);
+  expect(result).toBe("- Avoid using generic link text like `Learn more` or `Click here` at line 1");
+});
+
+
 test("no-alt-text: should not return errors", async () => {
   let result = await validate("```![]()```");
+  expect(result).toBe("");
+});
+
+test("no-generic-link-text: should not return errors", async () => {
+  // default configuration does not check for improper links
+  const result = await validate("[Learn more](https://docs.github.com)");
   expect(result).toBe("");
 });
 
