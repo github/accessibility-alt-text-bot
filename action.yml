@@ -68,14 +68,18 @@ runs:
    
         flag=$(node ${{ github.action_path }}/src/index.js "$content" "$CONFIG")
 
-        custom_config_message="<div alt-text-bot-id=\"$target_id\" /> Uh oh! @$user, your markdown has a few linting errors. Check $target to fix the following violations:
+        custom_config_message="<div alt-text-bot-id=\"$target_id\" /> 
+        
+        Uh oh! @$user, your markdown has a few linting errors. Check $target to fix the following violations:
 
         $flag 
 
         > 🤖 Beep boop! This comment was added automatically by [github/accessibility-alt-text-bot](https://github.com/github/accessibility-alt-text-bot).
         "
         
-        message="<div alt-text-bot-id=\"$target_id\" /> Uh oh! @$user, at least one image you shared is missing helpful alt text. Check $target to fix the following violations:
+        message="<div alt-text-bot-id=\"$target_id\" /> 
+        
+        Uh oh! @$user, at least one image you shared is missing helpful alt text. Check $target to fix the following violations:
 
         $flag 
 
