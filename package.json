@@ -20,12 +20,13 @@
     },
     "homepage": "https://github.com/github/accessibility-alt-text-bot#readme",
     "devDependencies": {
-        "all-contributors-cli": "^6.25.1",
+        "all-contributors-cli": "^6.26.1",
         "jest": "^30.0.5"
     },
     "dependencies": {
-        "@github/markdownlint-github": "^0.6.2",
+        "@github/markdownlint-github": "^0.8.0",
         "js-yaml": "^4.1.0",
-        "markdownlint": "^0.33.0"
+        "markdown-it": "14.1.0",
+        "markdownlint": "^0.38.0"
     }
 }
