@@ -1,5 +1,6 @@
 import markdownIt from "markdown-it";
 import { lint } from "markdownlint/sync";
+import configOptions from "@github/markdownlint-github";
 import yaml from "js-yaml";
 const markdownItFactory = () => markdownIt({ html: true });
 
@@ -20,7 +21,7 @@ export const validate = (markdown, config) => {
           },
       handleRuleFailures: true,
       markdownItFactory,
-      customRules: ["@github/markdownlint-github"],
+      customRules: [configOptions],
     }).content?.map((error) => {
       return `- ${error.ruleDescription} at line ${error.lineNumber}`;
     }) ?? []
