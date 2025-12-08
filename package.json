@@ -24,6 +24,6 @@
         "@github/markdownlint-github": "^0.8.0",
         "js-yaml": "^4.1.1",
         "markdown-it": "14.1.0",
-        "markdownlint": "^0.39.0"
+        "markdownlint": "^0.40.0"
     }
 }
