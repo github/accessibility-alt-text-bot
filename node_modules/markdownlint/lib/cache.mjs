@@ -6,6 +6,7 @@ import { filterByTypes } from "../helpers/micromark-helpers.cjs";
 /** @typedef {import("markdownlint").RuleParams} RuleParams */
 /** @typedef {import("markdownlint").MicromarkToken} MicromarkToken */
 /** @typedef {import("markdownlint").MicromarkTokenType} MicromarkTokenType */
+/** @typedef {import("../helpers/helpers.cjs").GetReferenceLinkImageDataResult} GetReferenceLinkImageDataResult */
 
 /** @type {Map<string, object>} */
 const map = new Map();
@@ -36,11 +37,12 @@ export function micromarkTokens() {
  * Gets a cached object value - computes it and caches it.
  *
  * @param {string} name Cache object name.
- * @param {Function} getValue Getter for object value.
+ * @param {() => Object} getValue Getter for object value.
  * @returns {Object} Object value.
  */
 function getCached(name, getValue) {
   if (map.has(name)) {
+    // @ts-ignore
     return map.get(name);
   }
   const value = getValue();
@@ -56,6 +58,7 @@ function getCached(name, getValue) {
  * @returns {MicromarkToken[]} Filtered tokens.
  */
 export function filterByTypesCached(types, htmlFlow) {
+  // @ts-ignore
   return getCached(
     // eslint-disable-next-line prefer-rest-params
     JSON.stringify(arguments),
@@ -66,9 +69,10 @@ export function filterByTypesCached(types, htmlFlow) {
 /**
  * Gets a reference link and image data object.
  *
- * @returns {Object} Reference link and image data object.
+ * @returns {GetReferenceLinkImageDataResult} Reference link and image data object.
  */
 export function getReferenceLinkImageData() {
+  // @ts-ignore
   return getCached(
     getReferenceLinkImageData.name,
     () => helpersGetReferenceLinkImageData(micromarkTokens())

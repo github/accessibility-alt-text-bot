@@ -13,77 +13,178 @@ export interface ConfigurationStrict {
   /**
    * Default state for all rules
    */
-  default?: boolean;
+  default?: boolean | ("error" | "warning");
   /**
    * Path to configuration file to extend
    */
   extends?: string | null;
   /**
-   * MD001/heading-increment : Heading levels should only increment by one level at a time : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md001.md
+   * MD001/heading-increment : Heading levels should only increment by one level at a time : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md001.md
    */
-  MD001?: boolean;
+  MD001?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+        /**
+         * RegExp for matching title in front matter
+         */
+        front_matter_title?: string;
+      };
   /**
-   * MD001/heading-increment : Heading levels should only increment by one level at a time : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md001.md
+   * MD001/heading-increment : Heading levels should only increment by one level at a time : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md001.md
    */
-  "heading-increment"?: boolean;
+  "heading-increment"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+        /**
+         * RegExp for matching title in front matter
+         */
+        front_matter_title?: string;
+      };
   /**
-   * MD003/heading-style : Heading style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md003.md
+   * MD003/heading-style : Heading style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md003.md
    */
   MD003?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Heading style
          */
         style?: "consistent" | "atx" | "atx_closed" | "setext" | "setext_with_atx" | "setext_with_atx_closed";
       };
   /**
-   * MD003/heading-style : Heading style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md003.md
+   * MD003/heading-style : Heading style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md003.md
    */
   "heading-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Heading style
          */
         style?: "consistent" | "atx" | "atx_closed" | "setext" | "setext_with_atx" | "setext_with_atx_closed";
       };
   /**
-   * MD004/ul-style : Unordered list style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md004.md
+   * MD004/ul-style : Unordered list style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md004.md
    */
   MD004?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List style
          */
         style?: "consistent" | "asterisk" | "plus" | "dash" | "sublist";
       };
   /**
-   * MD004/ul-style : Unordered list style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md004.md
+   * MD004/ul-style : Unordered list style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md004.md
    */
   "ul-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List style
          */
         style?: "consistent" | "asterisk" | "plus" | "dash" | "sublist";
       };
   /**
-   * MD005/list-indent : Inconsistent indentation for list items at the same level : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md005.md
+   * MD005/list-indent : Inconsistent indentation for list items at the same level : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md005.md
    */
-  MD005?: boolean;
+  MD005?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD005/list-indent : Inconsistent indentation for list items at the same level : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md005.md
+   * MD005/list-indent : Inconsistent indentation for list items at the same level : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md005.md
    */
-  "list-indent"?: boolean;
+  "list-indent"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD007/ul-indent : Unordered list indentation : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md007.md
+   * MD007/ul-indent : Unordered list indentation : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md007.md
    */
   MD007?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Spaces for indent
          */
@@ -98,11 +199,20 @@ export interface ConfigurationStrict {
         start_indent?: number;
       };
   /**
-   * MD007/ul-indent : Unordered list indentation : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md007.md
+   * MD007/ul-indent : Unordered list indentation : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md007.md
    */
   "ul-indent"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Spaces for indent
          */
@@ -117,15 +227,28 @@ export interface ConfigurationStrict {
         start_indent?: number;
       };
   /**
-   * MD009/no-trailing-spaces : Trailing spaces : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md009.md
+   * MD009/no-trailing-spaces : Trailing spaces : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md009.md
    */
   MD009?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Spaces for line break
          */
         br_spaces?: number;
+        /**
+         * Include code blocks
+         */
+        code_blocks?: boolean;
         /**
          * Allow spaces for empty lines in list items
          */
@@ -136,15 +259,28 @@ export interface ConfigurationStrict {
         strict?: boolean;
       };
   /**
-   * MD009/no-trailing-spaces : Trailing spaces : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md009.md
+   * MD009/no-trailing-spaces : Trailing spaces : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md009.md
    */
   "no-trailing-spaces"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Spaces for line break
          */
         br_spaces?: number;
+        /**
+         * Include code blocks
+         */
+        code_blocks?: boolean;
         /**
          * Allow spaces for empty lines in list items
          */
@@ -155,11 +291,20 @@ export interface ConfigurationStrict {
         strict?: boolean;
       };
   /**
-   * MD010/no-hard-tabs : Hard tabs : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md010.md
+   * MD010/no-hard-tabs : Hard tabs : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md010.md
    */
   MD010?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Include code blocks
          */
@@ -174,11 +319,20 @@ export interface ConfigurationStrict {
         spaces_per_tab?: number;
       };
   /**
-   * MD010/no-hard-tabs : Hard tabs : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md010.md
+   * MD010/no-hard-tabs : Hard tabs : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md010.md
    */
   "no-hard-tabs"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Include code blocks
          */
@@ -193,41 +347,92 @@ export interface ConfigurationStrict {
         spaces_per_tab?: number;
       };
   /**
-   * MD011/no-reversed-links : Reversed link syntax : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md011.md
+   * MD011/no-reversed-links : Reversed link syntax : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md011.md
    */
-  MD011?: boolean;
+  MD011?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD011/no-reversed-links : Reversed link syntax : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md011.md
+   * MD011/no-reversed-links : Reversed link syntax : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md011.md
    */
-  "no-reversed-links"?: boolean;
+  "no-reversed-links"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD012/no-multiple-blanks : Multiple consecutive blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md012.md
+   * MD012/no-multiple-blanks : Multiple consecutive blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md012.md
    */
   MD012?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Consecutive blank lines
          */
         maximum?: number;
       };
   /**
-   * MD012/no-multiple-blanks : Multiple consecutive blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md012.md
+   * MD012/no-multiple-blanks : Multiple consecutive blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md012.md
    */
   "no-multiple-blanks"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Consecutive blank lines
          */
         maximum?: number;
       };
   /**
-   * MD013/line-length : Line length : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md013.md
+   * MD013/line-length : Line length : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md013.md
    */
   MD013?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Number of characters
          */
@@ -262,11 +467,20 @@ export interface ConfigurationStrict {
         stern?: boolean;
       };
   /**
-   * MD013/line-length : Line length : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md013.md
+   * MD013/line-length : Line length : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md013.md
    */
   "line-length"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Number of characters
          */
@@ -301,51 +515,180 @@ export interface ConfigurationStrict {
         stern?: boolean;
       };
   /**
-   * MD014/commands-show-output : Dollar signs used before commands without showing output : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md014.md
+   * MD014/commands-show-output : Dollar signs used before commands without showing output : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md014.md
    */
-  MD014?: boolean;
+  MD014?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD014/commands-show-output : Dollar signs used before commands without showing output : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md014.md
+   * MD014/commands-show-output : Dollar signs used before commands without showing output : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md014.md
    */
-  "commands-show-output"?: boolean;
+  "commands-show-output"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD018/no-missing-space-atx : No space after hash on atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md018.md
+   * MD018/no-missing-space-atx : No space after hash on atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md018.md
    */
-  MD018?: boolean;
+  MD018?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD018/no-missing-space-atx : No space after hash on atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md018.md
+   * MD018/no-missing-space-atx : No space after hash on atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md018.md
    */
-  "no-missing-space-atx"?: boolean;
+  "no-missing-space-atx"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD019/no-multiple-space-atx : Multiple spaces after hash on atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md019.md
+   * MD019/no-multiple-space-atx : Multiple spaces after hash on atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md019.md
    */
-  MD019?: boolean;
+  MD019?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD019/no-multiple-space-atx : Multiple spaces after hash on atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md019.md
+   * MD019/no-multiple-space-atx : Multiple spaces after hash on atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md019.md
    */
-  "no-multiple-space-atx"?: boolean;
+  "no-multiple-space-atx"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD020/no-missing-space-closed-atx : No space inside hashes on closed atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md020.md
+   * MD020/no-missing-space-closed-atx : No space inside hashes on closed atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md020.md
    */
-  MD020?: boolean;
+  MD020?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD020/no-missing-space-closed-atx : No space inside hashes on closed atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md020.md
+   * MD020/no-missing-space-closed-atx : No space inside hashes on closed atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md020.md
    */
-  "no-missing-space-closed-atx"?: boolean;
+  "no-missing-space-closed-atx"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD021/no-multiple-space-closed-atx : Multiple spaces inside hashes on closed atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md021.md
+   * MD021/no-multiple-space-closed-atx : Multiple spaces inside hashes on closed atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md021.md
    */
-  MD021?: boolean;
+  MD021?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD021/no-multiple-space-closed-atx : Multiple spaces inside hashes on closed atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md021.md
+   * MD021/no-multiple-space-closed-atx : Multiple spaces inside hashes on closed atx style heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md021.md
    */
-  "no-multiple-space-closed-atx"?: boolean;
+  "no-multiple-space-closed-atx"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD022/blanks-around-headings : Headings should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md022.md
+   * MD022/blanks-around-headings : Headings should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md022.md
    */
   MD022?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Blank lines above heading
          */
@@ -356,11 +699,20 @@ export interface ConfigurationStrict {
         lines_below?: number | number[];
       };
   /**
-   * MD022/blanks-around-headings : Headings should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md022.md
+   * MD022/blanks-around-headings : Headings should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md022.md
    */
   "blanks-around-headings"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Blank lines above heading
          */
@@ -371,41 +723,92 @@ export interface ConfigurationStrict {
         lines_below?: number | number[];
       };
   /**
-   * MD023/heading-start-left : Headings must start at the beginning of the line : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md023.md
+   * MD023/heading-start-left : Headings must start at the beginning of the line : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md023.md
    */
-  MD023?: boolean;
+  MD023?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD023/heading-start-left : Headings must start at the beginning of the line : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md023.md
+   * MD023/heading-start-left : Headings must start at the beginning of the line : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md023.md
    */
-  "heading-start-left"?: boolean;
+  "heading-start-left"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD024/no-duplicate-heading : Multiple headings with the same content : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md024.md
+   * MD024/no-duplicate-heading : Multiple headings with the same content : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md024.md
    */
   MD024?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Only check sibling headings
          */
         siblings_only?: boolean;
       };
   /**
-   * MD024/no-duplicate-heading : Multiple headings with the same content : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md024.md
+   * MD024/no-duplicate-heading : Multiple headings with the same content : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md024.md
    */
   "no-duplicate-heading"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Only check sibling headings
          */
         siblings_only?: boolean;
       };
   /**
-   * MD025/single-title/single-h1 : Multiple top-level headings in the same document : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md025.md
+   * MD025/single-title/single-h1 : Multiple top-level headings in the same document : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md025.md
    */
   MD025?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * RegExp for matching title in front matter
          */
@@ -416,11 +819,20 @@ export interface ConfigurationStrict {
         level?: number;
       };
   /**
-   * MD025/single-title/single-h1 : Multiple top-level headings in the same document : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md025.md
+   * MD025/single-title/single-h1 : Multiple top-level headings in the same document : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md025.md
    */
   "single-title"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * RegExp for matching title in front matter
          */
@@ -431,11 +843,20 @@ export interface ConfigurationStrict {
         level?: number;
       };
   /**
-   * MD025/single-title/single-h1 : Multiple top-level headings in the same document : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md025.md
+   * MD025/single-title/single-h1 : Multiple top-level headings in the same document : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md025.md
    */
   "single-h1"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * RegExp for matching title in front matter
          */
@@ -446,85 +867,172 @@ export interface ConfigurationStrict {
         level?: number;
       };
   /**
-   * MD026/no-trailing-punctuation : Trailing punctuation in heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md026.md
+   * MD026/no-trailing-punctuation : Trailing punctuation in heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md026.md
    */
   MD026?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Punctuation characters
          */
         punctuation?: string;
       };
   /**
-   * MD026/no-trailing-punctuation : Trailing punctuation in heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md026.md
+   * MD026/no-trailing-punctuation : Trailing punctuation in heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md026.md
    */
   "no-trailing-punctuation"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Punctuation characters
          */
         punctuation?: string;
       };
   /**
-   * MD027/no-multiple-space-blockquote : Multiple spaces after blockquote symbol : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md027.md
+   * MD027/no-multiple-space-blockquote : Multiple spaces after blockquote symbol : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md027.md
    */
   MD027?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Include list items
          */
         list_items?: boolean;
       };
   /**
-   * MD027/no-multiple-space-blockquote : Multiple spaces after blockquote symbol : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md027.md
+   * MD027/no-multiple-space-blockquote : Multiple spaces after blockquote symbol : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md027.md
    */
   "no-multiple-space-blockquote"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Include list items
          */
         list_items?: boolean;
       };
   /**
-   * MD028/no-blanks-blockquote : Blank line inside blockquote : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md028.md
+   * MD028/no-blanks-blockquote : Blank line inside blockquote : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md028.md
    */
-  MD028?: boolean;
+  MD028?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD028/no-blanks-blockquote : Blank line inside blockquote : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md028.md
+   * MD028/no-blanks-blockquote : Blank line inside blockquote : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md028.md
    */
-  "no-blanks-blockquote"?: boolean;
+  "no-blanks-blockquote"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD029/ol-prefix : Ordered list item prefix : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md029.md
+   * MD029/ol-prefix : Ordered list item prefix : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md029.md
    */
   MD029?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List style
          */
         style?: "one" | "ordered" | "one_or_ordered" | "zero";
       };
   /**
-   * MD029/ol-prefix : Ordered list item prefix : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md029.md
+   * MD029/ol-prefix : Ordered list item prefix : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md029.md
    */
   "ol-prefix"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List style
          */
         style?: "one" | "ordered" | "one_or_ordered" | "zero";
       };
   /**
-   * MD030/list-marker-space : Spaces after list markers : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md030.md
+   * MD030/list-marker-space : Spaces after list markers : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md030.md
    */
   MD030?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Spaces for single-line unordered list items
          */
@@ -543,11 +1051,20 @@ export interface ConfigurationStrict {
         ol_multi?: number;
       };
   /**
-   * MD030/list-marker-space : Spaces after list markers : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md030.md
+   * MD030/list-marker-space : Spaces after list markers : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md030.md
    */
   "list-marker-space"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Spaces for single-line unordered list items
          */
@@ -566,139 +1083,348 @@ export interface ConfigurationStrict {
         ol_multi?: number;
       };
   /**
-   * MD031/blanks-around-fences : Fenced code blocks should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md031.md
+   * MD031/blanks-around-fences : Fenced code blocks should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md031.md
    */
   MD031?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Include list items
          */
         list_items?: boolean;
       };
   /**
-   * MD031/blanks-around-fences : Fenced code blocks should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md031.md
+   * MD031/blanks-around-fences : Fenced code blocks should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md031.md
    */
   "blanks-around-fences"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Include list items
          */
         list_items?: boolean;
       };
   /**
-   * MD032/blanks-around-lists : Lists should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md032.md
+   * MD032/blanks-around-lists : Lists should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md032.md
    */
-  MD032?: boolean;
+  MD032?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD032/blanks-around-lists : Lists should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md032.md
+   * MD032/blanks-around-lists : Lists should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md032.md
    */
-  "blanks-around-lists"?: boolean;
+  "blanks-around-lists"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD033/no-inline-html : Inline HTML : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md033.md
+   * MD033/no-inline-html : Inline HTML : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md033.md
    */
   MD033?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Allowed elements
          */
         allowed_elements?: string[];
+        /**
+         * Allowed elements in tables
+         */
+        table_allowed_elements?: string[];
       };
   /**
-   * MD033/no-inline-html : Inline HTML : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md033.md
+   * MD033/no-inline-html : Inline HTML : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md033.md
    */
   "no-inline-html"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Allowed elements
          */
         allowed_elements?: string[];
+        /**
+         * Allowed elements in tables
+         */
+        table_allowed_elements?: string[];
       };
   /**
-   * MD034/no-bare-urls : Bare URL used : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md034.md
+   * MD034/no-bare-urls : Bare URL used : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md034.md
    */
-  MD034?: boolean;
+  MD034?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD034/no-bare-urls : Bare URL used : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md034.md
+   * MD034/no-bare-urls : Bare URL used : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md034.md
    */
-  "no-bare-urls"?: boolean;
+  "no-bare-urls"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD035/hr-style : Horizontal rule style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md035.md
+   * MD035/hr-style : Horizontal rule style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md035.md
    */
   MD035?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Horizontal rule style
          */
         style?: string;
       };
   /**
-   * MD035/hr-style : Horizontal rule style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md035.md
+   * MD035/hr-style : Horizontal rule style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md035.md
    */
   "hr-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Horizontal rule style
          */
         style?: string;
       };
   /**
-   * MD036/no-emphasis-as-heading : Emphasis used instead of a heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md036.md
+   * MD036/no-emphasis-as-heading : Emphasis used instead of a heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md036.md
    */
   MD036?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Punctuation characters
          */
         punctuation?: string;
       };
   /**
-   * MD036/no-emphasis-as-heading : Emphasis used instead of a heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md036.md
+   * MD036/no-emphasis-as-heading : Emphasis used instead of a heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md036.md
    */
   "no-emphasis-as-heading"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Punctuation characters
          */
         punctuation?: string;
       };
   /**
-   * MD037/no-space-in-emphasis : Spaces inside emphasis markers : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md037.md
+   * MD037/no-space-in-emphasis : Spaces inside emphasis markers : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md037.md
    */
-  MD037?: boolean;
+  MD037?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD037/no-space-in-emphasis : Spaces inside emphasis markers : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md037.md
+   * MD037/no-space-in-emphasis : Spaces inside emphasis markers : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md037.md
    */
-  "no-space-in-emphasis"?: boolean;
+  "no-space-in-emphasis"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD038/no-space-in-code : Spaces inside code span elements : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md038.md
+   * MD038/no-space-in-code : Spaces inside code span elements : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md038.md
    */
-  MD038?: boolean;
+  MD038?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD038/no-space-in-code : Spaces inside code span elements : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md038.md
+   * MD038/no-space-in-code : Spaces inside code span elements : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md038.md
    */
-  "no-space-in-code"?: boolean;
+  "no-space-in-code"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD039/no-space-in-links : Spaces inside link text : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md039.md
+   * MD039/no-space-in-links : Spaces inside link text : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md039.md
    */
-  MD039?: boolean;
+  MD039?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD039/no-space-in-links : Spaces inside link text : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md039.md
+   * MD039/no-space-in-links : Spaces inside link text : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md039.md
    */
-  "no-space-in-links"?: boolean;
+  "no-space-in-links"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD040/fenced-code-language : Fenced code blocks should have a language specified : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md040.md
+   * MD040/fenced-code-language : Fenced code blocks should have a language specified : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md040.md
    */
   MD040?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List of languages
          */
@@ -709,11 +1435,20 @@ export interface ConfigurationStrict {
         language_only?: boolean;
       };
   /**
-   * MD040/fenced-code-language : Fenced code blocks should have a language specified : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md040.md
+   * MD040/fenced-code-language : Fenced code blocks should have a language specified : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md040.md
    */
   "fenced-code-language"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List of languages
          */
@@ -724,11 +1459,20 @@ export interface ConfigurationStrict {
         language_only?: boolean;
       };
   /**
-   * MD041/first-line-heading/first-line-h1 : First line in a file should be a top-level heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md041.md
+   * MD041/first-line-heading/first-line-h1 : First line in a file should be a top-level heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md041.md
    */
   MD041?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Allow content before first heading
          */
@@ -743,11 +1487,20 @@ export interface ConfigurationStrict {
         level?: number;
       };
   /**
-   * MD041/first-line-heading/first-line-h1 : First line in a file should be a top-level heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md041.md
+   * MD041/first-line-heading/first-line-h1 : First line in a file should be a top-level heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md041.md
    */
   "first-line-heading"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Allow content before first heading
          */
@@ -762,11 +1515,20 @@ export interface ConfigurationStrict {
         level?: number;
       };
   /**
-   * MD041/first-line-heading/first-line-h1 : First line in a file should be a top-level heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md041.md
+   * MD041/first-line-heading/first-line-h1 : First line in a file should be a top-level heading : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md041.md
    */
   "first-line-h1"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Allow content before first heading
          */
@@ -781,19 +1543,52 @@ export interface ConfigurationStrict {
         level?: number;
       };
   /**
-   * MD042/no-empty-links : No empty links : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md042.md
+   * MD042/no-empty-links : No empty links : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md042.md
    */
-  MD042?: boolean;
+  MD042?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD042/no-empty-links : No empty links : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md042.md
+   * MD042/no-empty-links : No empty links : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md042.md
    */
-  "no-empty-links"?: boolean;
+  "no-empty-links"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD043/required-headings : Required heading structure : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md043.md
+   * MD043/required-headings : Required heading structure : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md043.md
    */
   MD043?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List of headings
          */
@@ -804,11 +1599,20 @@ export interface ConfigurationStrict {
         match_case?: boolean;
       };
   /**
-   * MD043/required-headings : Required heading structure : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md043.md
+   * MD043/required-headings : Required heading structure : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md043.md
    */
   "required-headings"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List of headings
          */
@@ -819,11 +1623,20 @@ export interface ConfigurationStrict {
         match_case?: boolean;
       };
   /**
-   * MD044/proper-names : Proper names should have the correct capitalization : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md044.md
+   * MD044/proper-names : Proper names should have the correct capitalization : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md044.md
    */
   MD044?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List of proper names
          */
@@ -838,11 +1651,20 @@ export interface ConfigurationStrict {
         html_elements?: boolean;
       };
   /**
-   * MD044/proper-names : Proper names should have the correct capitalization : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md044.md
+   * MD044/proper-names : Proper names should have the correct capitalization : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md044.md
    */
   "proper-names"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * List of proper names
          */
@@ -857,115 +1679,244 @@ export interface ConfigurationStrict {
         html_elements?: boolean;
       };
   /**
-   * MD045/no-alt-text : Images should have alternate text (alt text) : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md045.md
+   * MD045/no-alt-text : Images should have alternate text (alt text) : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md045.md
    */
-  MD045?: boolean;
+  MD045?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD045/no-alt-text : Images should have alternate text (alt text) : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md045.md
+   * MD045/no-alt-text : Images should have alternate text (alt text) : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md045.md
    */
-  "no-alt-text"?: boolean;
+  "no-alt-text"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD046/code-block-style : Code block style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md046.md
+   * MD046/code-block-style : Code block style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md046.md
    */
   MD046?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Block style
          */
         style?: "consistent" | "fenced" | "indented";
       };
   /**
-   * MD046/code-block-style : Code block style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md046.md
+   * MD046/code-block-style : Code block style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md046.md
    */
   "code-block-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Block style
          */
         style?: "consistent" | "fenced" | "indented";
       };
   /**
-   * MD047/single-trailing-newline : Files should end with a single newline character : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md047.md
+   * MD047/single-trailing-newline : Files should end with a single newline character : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md047.md
    */
-  MD047?: boolean;
+  MD047?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD047/single-trailing-newline : Files should end with a single newline character : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md047.md
+   * MD047/single-trailing-newline : Files should end with a single newline character : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md047.md
    */
-  "single-trailing-newline"?: boolean;
+  "single-trailing-newline"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD048/code-fence-style : Code fence style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md048.md
+   * MD048/code-fence-style : Code fence style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md048.md
    */
   MD048?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Code fence style
          */
         style?: "consistent" | "backtick" | "tilde";
       };
   /**
-   * MD048/code-fence-style : Code fence style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md048.md
+   * MD048/code-fence-style : Code fence style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md048.md
    */
   "code-fence-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Code fence style
          */
         style?: "consistent" | "backtick" | "tilde";
       };
   /**
-   * MD049/emphasis-style : Emphasis style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md049.md
+   * MD049/emphasis-style : Emphasis style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md049.md
    */
   MD049?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Emphasis style
          */
         style?: "consistent" | "asterisk" | "underscore";
       };
   /**
-   * MD049/emphasis-style : Emphasis style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md049.md
+   * MD049/emphasis-style : Emphasis style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md049.md
    */
   "emphasis-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Emphasis style
          */
         style?: "consistent" | "asterisk" | "underscore";
       };
   /**
-   * MD050/strong-style : Strong style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md050.md
+   * MD050/strong-style : Strong style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md050.md
    */
   MD050?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Strong style
          */
         style?: "consistent" | "asterisk" | "underscore";
       };
   /**
-   * MD050/strong-style : Strong style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md050.md
+   * MD050/strong-style : Strong style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md050.md
    */
   "strong-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Strong style
          */
         style?: "consistent" | "asterisk" | "underscore";
       };
   /**
-   * MD051/link-fragments : Link fragments should be valid : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md051.md
+   * MD051/link-fragments : Link fragments should be valid : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md051.md
    */
   MD051?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Ignore case of fragments
          */
@@ -976,11 +1927,20 @@ export interface ConfigurationStrict {
         ignored_pattern?: string;
       };
   /**
-   * MD051/link-fragments : Link fragments should be valid : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md051.md
+   * MD051/link-fragments : Link fragments should be valid : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md051.md
    */
   "link-fragments"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Ignore case of fragments
          */
@@ -991,11 +1951,20 @@ export interface ConfigurationStrict {
         ignored_pattern?: string;
       };
   /**
-   * MD052/reference-links-images : Reference links and images should use a label that is defined : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md052.md
+   * MD052/reference-links-images : Reference links and images should use a label that is defined : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md052.md
    */
   MD052?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Ignored link labels
          */
@@ -1006,11 +1975,20 @@ export interface ConfigurationStrict {
         shortcut_syntax?: boolean;
       };
   /**
-   * MD052/reference-links-images : Reference links and images should use a label that is defined : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md052.md
+   * MD052/reference-links-images : Reference links and images should use a label that is defined : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md052.md
    */
   "reference-links-images"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Ignored link labels
          */
@@ -1021,33 +1999,60 @@ export interface ConfigurationStrict {
         shortcut_syntax?: boolean;
       };
   /**
-   * MD053/link-image-reference-definitions : Link and image reference definitions should be needed : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md053.md
+   * MD053/link-image-reference-definitions : Link and image reference definitions should be needed : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md053.md
    */
   MD053?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Ignored definitions
          */
         ignored_definitions?: string[];
       };
   /**
-   * MD053/link-image-reference-definitions : Link and image reference definitions should be needed : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md053.md
+   * MD053/link-image-reference-definitions : Link and image reference definitions should be needed : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md053.md
    */
   "link-image-reference-definitions"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Ignored definitions
          */
         ignored_definitions?: string[];
       };
   /**
-   * MD054/link-image-style : Link and image style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md054.md
+   * MD054/link-image-style : Link and image style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md054.md
    */
   MD054?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Allow autolinks
          */
@@ -1074,11 +2079,20 @@ export interface ConfigurationStrict {
         url_inline?: boolean;
       };
   /**
-   * MD054/link-image-style : Link and image style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md054.md
+   * MD054/link-image-style : Link and image style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md054.md
    */
   "link-image-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Allow autolinks
          */
@@ -1105,159 +2119,291 @@ export interface ConfigurationStrict {
         url_inline?: boolean;
       };
   /**
-   * MD055/table-pipe-style : Table pipe style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md055.md
+   * MD055/table-pipe-style : Table pipe style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md055.md
    */
   MD055?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Table pipe style
          */
         style?: "consistent" | "leading_only" | "trailing_only" | "leading_and_trailing" | "no_leading_or_trailing";
       };
   /**
-   * MD055/table-pipe-style : Table pipe style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md055.md
+   * MD055/table-pipe-style : Table pipe style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md055.md
    */
   "table-pipe-style"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Table pipe style
          */
         style?: "consistent" | "leading_only" | "trailing_only" | "leading_and_trailing" | "no_leading_or_trailing";
       };
   /**
-   * MD056/table-column-count : Table column count : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md056.md
+   * MD056/table-column-count : Table column count : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md056.md
    */
-  MD056?: boolean;
+  MD056?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD056/table-column-count : Table column count : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md056.md
+   * MD056/table-column-count : Table column count : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md056.md
    */
-  "table-column-count"?: boolean;
+  "table-column-count"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD058/blanks-around-tables : Tables should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md058.md
+   * MD058/blanks-around-tables : Tables should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md058.md
    */
-  MD058?: boolean;
+  MD058?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD058/blanks-around-tables : Tables should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md058.md
+   * MD058/blanks-around-tables : Tables should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md058.md
    */
-  "blanks-around-tables"?: boolean;
+  "blanks-around-tables"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+      };
   /**
-   * MD059/descriptive-link-text : Link text should be descriptive : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md059.md
+   * MD059/descriptive-link-text : Link text should be descriptive : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md059.md
    */
   MD059?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Prohibited link texts
          */
         prohibited_texts?: string[];
       };
   /**
-   * MD059/descriptive-link-text : Link text should be descriptive : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md059.md
+   * MD059/descriptive-link-text : Link text should be descriptive : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md059.md
    */
   "descriptive-link-text"?:
     | boolean
+    | ("error" | "warning")
     | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
         /**
          * Prohibited link texts
          */
         prohibited_texts?: string[];
+      };
+  /**
+   * MD060/table-column-style : Table column style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md060.md
+   */
+  MD060?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+        /**
+         * Table column style
+         */
+        style?: "any" | "aligned" | "compact" | "tight";
+        /**
+         * Aligned delimiter columns
+         */
+        aligned_delimiter?: boolean;
+      };
+  /**
+   * MD060/table-column-style : Table column style : https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md060.md
+   */
+  "table-column-style"?:
+    | boolean
+    | ("error" | "warning")
+    | {
+        /**
+         * Whether to enable the rule
+         */
+        enabled?: boolean;
+        /**
+         * Rule severity
+         */
+        severity?: "error" | "warning";
+        /**
+         * Table column style
+         */
+        style?: "any" | "aligned" | "compact" | "tight";
+        /**
+         * Aligned delimiter columns
+         */
+        aligned_delimiter?: boolean;
       };
   /**
    * headings : MD001, MD003, MD018, MD019, MD020, MD021, MD022, MD023, MD024, MD025, MD026, MD036, MD041, MD043
    */
-  headings?: boolean;
+  headings?: boolean | ("error" | "warning");
   /**
    * bullet : MD004, MD005, MD007, MD032
    */
-  bullet?: boolean;
+  bullet?: boolean | ("error" | "warning");
   /**
    * ul : MD004, MD005, MD007, MD030, MD032
    */
-  ul?: boolean;
+  ul?: boolean | ("error" | "warning");
   /**
    * indentation : MD005, MD007, MD027
    */
-  indentation?: boolean;
+  indentation?: boolean | ("error" | "warning");
   /**
    * whitespace : MD009, MD010, MD012, MD027, MD028, MD030, MD037, MD038, MD039
    */
-  whitespace?: boolean;
+  whitespace?: boolean | ("error" | "warning");
   /**
    * hard_tab : MD010
    */
-  hard_tab?: boolean;
+  hard_tab?: boolean | ("error" | "warning");
   /**
    * links : MD011, MD034, MD039, MD042, MD051, MD052, MD053, MD054, MD059
    */
-  links?: boolean;
+  links?: boolean | ("error" | "warning");
   /**
    * blank_lines : MD012, MD022, MD031, MD032, MD047
    */
-  blank_lines?: boolean;
+  blank_lines?: boolean | ("error" | "warning");
   /**
    * line_length : MD013
    */
-  line_length?: boolean;
+  line_length?: boolean | ("error" | "warning");
   /**
    * code : MD014, MD031, MD038, MD040, MD046, MD048
    */
-  code?: boolean;
+  code?: boolean | ("error" | "warning");
   /**
    * atx : MD018, MD019
    */
-  atx?: boolean;
+  atx?: boolean | ("error" | "warning");
   /**
    * spaces : MD018, MD019, MD020, MD021, MD023
    */
-  spaces?: boolean;
+  spaces?: boolean | ("error" | "warning");
   /**
    * atx_closed : MD020, MD021
    */
-  atx_closed?: boolean;
+  atx_closed?: boolean | ("error" | "warning");
   /**
    * blockquote : MD027, MD028
    */
-  blockquote?: boolean;
+  blockquote?: boolean | ("error" | "warning");
   /**
    * ol : MD029, MD030, MD032
    */
-  ol?: boolean;
+  ol?: boolean | ("error" | "warning");
   /**
    * html : MD033
    */
-  html?: boolean;
+  html?: boolean | ("error" | "warning");
   /**
    * url : MD034
    */
-  url?: boolean;
+  url?: boolean | ("error" | "warning");
   /**
    * hr : MD035
    */
-  hr?: boolean;
+  hr?: boolean | ("error" | "warning");
   /**
    * emphasis : MD036, MD037, MD049, MD050
    */
-  emphasis?: boolean;
+  emphasis?: boolean | ("error" | "warning");
   /**
    * language : MD040
    */
-  language?: boolean;
+  language?: boolean | ("error" | "warning");
   /**
    * spelling : MD044
    */
-  spelling?: boolean;
+  spelling?: boolean | ("error" | "warning");
   /**
    * accessibility : MD045, MD059
    */
-  accessibility?: boolean;
+  accessibility?: boolean | ("error" | "warning");
   /**
    * images : MD045, MD052, MD053, MD054
    */
-  images?: boolean;
+  images?: boolean | ("error" | "warning");
   /**
-   * table : MD055, MD056, MD058
+   * table : MD055, MD056, MD058, MD060
    */
-  table?: boolean;
+  table?: boolean | ("error" | "warning");
 }

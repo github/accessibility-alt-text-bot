@@ -142,11 +142,10 @@ export function getEvents(
           .trim();
         if ((text.length > 0) && !text.includes("]")) {
           /** @type {Event[]} */
-          const artificialEvents = [];
-          artificialEvents.push(
+          const artificialEvents = [
             [ "enter", undefinedReferenceType, tokenizeContext ],
             [ "enter", undefinedReference, tokenizeContext ]
-          );
+          ];
           for (const event of eventsToReplicate) {
             const [ kind, token ] = event;
             // Copy token because the current object will get modified by the parser
@@ -212,7 +211,9 @@ function parseInternal(
   const events = getEvents(markdown, micromarkParseOptions);
 
   // Create Token objects
+  /** @type {MicromarkToken[]} */
   const document = [];
+  /** @type {MicromarkToken[]} */
   let flatTokens = [];
   /** @type {MicromarkToken} */
   const root = {
@@ -282,6 +283,7 @@ function parseInternal(
         );
         current.children = tokens;
         // Avoid stack overflow of Array.push(...spread)
+        // @ts-ignore
         // eslint-disable-next-line unicorn/prefer-spread
         flatTokens = flatTokens.concat(tokens[flatTokensSymbol]);
       }

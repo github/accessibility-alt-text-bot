@@ -149,6 +149,7 @@ playground for learning and exploring.
 - **[MD056](doc/md056.md)** *table-column-count* - Table column count
 - **[MD058](doc/md058.md)** *blanks-around-tables* - Tables should be surrounded by blank lines
 - **[MD059](doc/md059.md)** *descriptive-link-text* - Link text should be descriptive
+- **[MD060](doc/md060.md)** *table-column-style* - Table column style
 
 <!-- markdownlint-restore -->
 
@@ -190,7 +191,7 @@ rules at once.
 - **`ol`** - `MD029`, `MD030`, `MD032`
 - **`spaces`** - `MD018`, `MD019`, `MD020`, `MD021`, `MD023`
 - **`spelling`** - `MD044`
-- **`table`** - `MD055`, `MD056`, `MD058`
+- **`table`** - `MD055`, `MD056`, `MD058`, `MD060`
 - **`ul`** - `MD004`, `MD005`, `MD007`, `MD030`, `MD032`
 - **`url`** - `MD034`
 - **`whitespace`** - `MD009`, `MD010`, `MD012`, `MD027`, `MD028`, `MD030`,
@@ -205,11 +206,10 @@ issues reported. Two kinds of text are ignored by most rules:
 - [Front matter](https://jekyllrb.com/docs/frontmatter/) (see
   `options.frontMatter` below)
 
-Rules can be enabled, disabled, and configured via `options.config`
-(described below) to define the expected behavior for a set of inputs.
-To enable or disable rules at a particular location within a file, add
-one of these markers to the appropriate place (HTML comments don't
-appear in the final markup):
+All rules are enabled by default. Rules can be enabled, disabled, and configured
+for each call to the `lint` API by passing an `options.config` object (described
+below). To enable or disable rules within a file, use one of the following HTML
+comments (which are not rendered):
 
 - Disable all rules: `<!-- markdownlint-disable -->`
 - Enable all rules: `<!-- markdownlint-enable -->`
@@ -361,22 +361,118 @@ of `files` or `strings` should be set to provide input.
 
 ##### options.config
 
-Type: `Object` mapping `String` to `Boolean | Object`
+Type: `Object` mapping `String` to `Boolean | "error" | "warning" | Object`
 
 Configures the rules to use.
 
 Object keys are rule names/aliases; object values are the rule's configuration.
-The value `false` disables a rule, `true` enables its default configuration,
-and passing an object value customizes that rule. Setting the special `default`
-rule to `true` or `false` includes/excludes all rules by default. In the absence
-of a configuration object, all rules are enabled. Enabling or disabling a tag
-name (ex: `whitespace`) affects all rules having that tag.
+The value `false` disables a rule. The values `true` or `"error"` enable a rule
+in its default configuration and report violations as errors. The value
+`"warning"` enables a rule in its default configuration and reports violations
+as warnings. Passing an object enables *and* customizes the rule; the properties
+`severity` (`"error" | "warning"`) and `enabled` (`false | true`) can be used in
+this context. The special `default` rule assigns the default for all rules.
+Using a tag name (e.g., `whitespace`) and a setting of `false`, `true`,
+`"error"`, or `"warning"` applies that setting to all rules with that tag. When
+no configuration object is passed or the optional `default` setting is not
+present, all rules are enabled.
 
-The `default` rule is applied first, then keys are processed in order from top
-to bottom with later values overriding earlier ones. Keys (including rule names,
-aliases, tags, and `default`) are not case-sensitive.
+The following syntax disables the specified rule, tag, or `default`:
 
-Example:
+```javascript
+{
+  "rule_tag_or_default": false
+}
+```
+
+The following syntax enables the specified rule, tag, or `default` to report
+violations as errors:
+
+```javascript
+{
+  "rule_tag_or_default": true
+  // OR
+  "rule_tag_or_default": "error"
+}
+```
+
+The following syntax enables the specified rule, tag, or `default` to report
+violations as warnings:
+
+```javascript
+{
+  "rule_tag_or_default": "warning"
+}
+```
+
+The following syntax enables and configures the specified rule to report
+violations as errors:
+
+```javascript
+{
+  "rule": {
+    "severity": "error"
+  }
+  // OR
+  "rule": {
+    "rule_parameter": "value"
+  }
+  // OR
+  "rule": {
+    "severity": "error",
+    "rule_parameter": "value"
+  }
+}
+```
+
+The following syntax enables and configures the specified rule to report
+violations as warnings:
+
+```javascript
+{
+  "rule": {
+    "severity": "warning"
+  }
+  // OR
+  "rule": {
+    "severity": "warning",
+    "rule_parameter": "value"
+  }
+}
+```
+
+> Note that values `"error"` and `"warning"` and the property `severity` are not
+> supported by library versions earlier than `0.39.0`. However, the examples
+> above behave the same there, with warnings being reported as errors.
+
+The following syntax disables and configures the specified rule:
+
+```javascript
+{
+  "rule": {
+    "enabled": false,
+    "rule_parameter": "value"
+  }
+  // OR
+  "rule": {
+    "enabled": false,
+    "severity": "warning",
+    "rule_parameter": "value"
+  }
+}
+```
+
+> Note that this example behaves **differently** with library versions earlier
+> than `0.39.0` because the property `enabled` is not supported: it **enables**
+> the rule instead of **disabling** it. As such, this syntax is discouraged when
+> interoperability is important.
+
+To evaluate a configuration object, the `default` setting is applied first, then
+keys are processed in order from top to bottom. If multiple values apply to a
+rule (because of tag names or duplication), later values override earlier ones.
+Keys (including rule names, aliases, tags, or `default`) are not case-sensitive.
+
+Example using `default`, rule names, and tag names together:
 
 ```json
 {
@@ -619,28 +715,15 @@ By default, properly-formatted inline comments can be used to create exceptions
 for parts of a document. Setting `noInlineConfig` to `true` ignores all such
 comments.
 
-##### options.resultVersion
+##### ~~options.resultVersion~~
 
-Type: `Number`
+This property is *deprecated* and should be removed. The default format of the
+`result` object remains the same as setting `resultVersion` to `3`. For
+continued access to other (previously *deprecated*) formats:
 
-Specifies which version of the `result` object to return (see the "Usage"
-section below for examples).
-
-Passing a `resultVersion` of `0` corresponds to the original, simple format
-where each error is identified by rule name and line number. *Deprecated*
-
-Passing a `resultVersion` of `1` corresponds to a detailed format where each
-error includes information about the line number, rule name, alias, description,
-as well as any additional detail or context that is available. *Deprecated*
-
-Passing a `resultVersion` of `2` corresponds to a detailed format where each
-error includes information about the line number, rule names, description, as
-well as any additional detail or context that is available. *Deprecated*
-
-Passing a `resultVersion` of `3` corresponds to the detailed version `2` format
-with additional information about how to fix automatically-fixable errors. In
-this mode, all errors that occur on each line are reported (other versions
-report only the first error for each rule). This is the default behavior.
+```javascript
+import { convertToResultVersion0, convertToResultVersion1, convertToResultVersion2 } from "markdownlint/helpers";
+```
 
 ##### options.strings
 
@@ -671,9 +754,9 @@ Standard completion callback.
 
 Type: `Object`
 
-Call `result.toString()` for convenience or see below for an example of the
-structure of the `result` object. Passing the value `true` to `toString()`
-uses rule aliases (ex: `no-hard-tabs`) instead of names (ex: `MD010`).
+Map of input file names and string identifiers to issues within.
+
+See the [Usage section](#usage) for an example of the structure of this object.
 
 ### Config
 
@@ -849,7 +932,7 @@ console.log(getVersion());
 
 ## Usage
 
-Invoke `lint` and use the `result` object's `toString` method:
+Invoke `lint` as an asynchronous call:
 
 ```javascript
 import { lint as lintAsync } from "markdownlint/async";
@@ -864,22 +947,9 @@ const options = {
 
 lintAsync(options, function callback(error, results) {
   if (!error && results) {
-    console.log(results.toString());
+    console.dir(results, { "colors": true, "depth": null });
   }
 });
-```
-
-Output:
-
-```text
-bad.string: 3: MD010/no-hard-tabs Hard tabs [Column: 19]
-bad.string: 1: MD018/no-missing-space-atx No space after hash on atx style heading [Context: "#bad.string"]
-bad.string: 3: MD018/no-missing-space-atx No space after hash on atx style heading [Context: "#This string fails        some rules."]
-bad.string: 1: MD041/first-line-heading/first-line-h1 First line in a file should be a top-level heading [Context: "#bad.string"]
-bad.md: 3: MD010/no-hard-tabs Hard tabs [Column: 17]
-bad.md: 1: MD018/no-missing-space-atx No space after hash on atx style heading [Context: "#bad.md"]
-bad.md: 3: MD018/no-missing-space-atx No space after hash on atx style heading [Context: "#This file fails      some rules."]
-bad.md: 1: MD041/first-line-heading/first-line-h1 First line in a file should be a top-level heading [Context: "#bad.md"]
 ```
 
 Or as a synchronous call:
@@ -888,10 +958,10 @@ Or as a synchronous call:
 import { lint as lintSync } from "markdownlint/sync";
 
 const results = lintSync(options);
-console.log(results.toString());
+console.dir(results, { "colors": true, "depth": null });
 ```
 
-To examine the `result` object directly via a `Promise`-based call:
+Or as a `Promise`-based call:
 
 ```javascript
 import { lint as lintPromise } from "markdownlint/promise";
@@ -900,7 +970,7 @@ const results = await lintPromise(options);
 console.dir(results, { "colors": true, "depth": null });
 ```
 
-Output:
+All of which return an object like:
 
 ```json
 {
@@ -909,40 +979,42 @@ Output:
     { "lineNumber": 3,
       "ruleNames": [ "MD010", "no-hard-tabs" ],
       "ruleDescription": "Hard tabs",
-      "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.0.0/doc/md010.md",
+      "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md010.md",
       "errorDetail": "Column: 17",
       "errorContext": null,
-      "errorRange": [ 17, 1 ] },
+      "errorRange": [ 17, 1 ],
+      "fixInfo": { "editColumn": 17, "deleteCount": 1, "insertText": " " },
+      "severity": "error" },
     { "lineNumber": 1,
       "ruleNames": [ "MD018", "no-missing-space-atx" ],
       "ruleDescription": "No space after hash on atx style heading",
-      "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.0.0/doc/md018.md",
+      "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md018.md",
       "errorDetail": null,
       "errorContext": "#bad.md",
-      "errorRange": [ 1, 2 ] },
+      "errorRange": [ 1, 2 ],
+      "fixInfo": { "editColumn": 2, "insertText": " " },
+      "severity": "error" },
     { "lineNumber": 3,
       "ruleNames": [ "MD018", "no-missing-space-atx" ],
       "ruleDescription": "No space after hash on atx style heading",
-      "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.0.0/doc/md018.md",
+      "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md018.md",
       "errorDetail": null,
       "errorContext": "#This file fails\tsome rules.",
-      "errorRange": [ 1, 2 ] },
+      "errorRange": [ 1, 2 ],
+      "fixInfo": { "editColumn": 2, "insertText": " " },
+      "severity": "error" },
     { "lineNumber": 1,
       "ruleNames": [ "MD041", "first-line-heading", "first-line-h1" ],
       "ruleDescription": "First line in a file should be a top-level heading",
-      "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.0.0/doc/md041.md",
+      "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/md041.md",
       "errorDetail": null,
       "errorContext": "#bad.md",
-      "errorRange": null }
+      "errorRange": null,
+      "fixInfo": null,
+      "severity": "error" }
   ]
 }
 ```
-
-Integration with the [gulp](https://gulpjs.com/) build system is
-straightforward: [`gulpfile.cjs`](example/gulpfile.cjs).
-
-Integration with the [Grunt](https://gruntjs.com/) build system is similar:
-[`Gruntfile.cjs`](example/Gruntfile.cjs).
 
 ## Browser
 
@@ -969,7 +1041,7 @@ const options = {
   }
 };
 
-const results = globalThis.markdownlint.lintSync(options).toString();
+const results = globalThis.markdownlint.lintSync(options);
 ```
 
 ## Examples
@@ -980,7 +1052,6 @@ following projects or one of the tools in the [Related section](#related):
 - [.NET Documentation][dot-net-doc] ([Search repository][dot-net-doc-search])
 - [ally.js][ally-js] ([Search repository][ally-js-search])
 - [Apache Airflow][airflow] ([Search repository][airflow-search])
-- [Boostnote][boostnote] ([Search repository][boostnote-search])
 - [CodiMD][codimd] ([Search repository][codimd-search])
 - [Electron][electron] ([Search repository][electron-search])
 - [ESLint][eslint] ([Search repository][eslint-search])
@@ -1004,8 +1075,6 @@ For more advanced integration scenarios:
 [ally-js-search]: https://github.com/medialize/ally.js/search?q=markdownlint
 [airflow]: https://airflow.apache.org
 [airflow-search]: https://github.com/apache/airflow/search?q=markdownlint
-[boostnote]: https://boostnote.io/
-[boostnote-search]: https://github.com/BoostIO/Boostnote/search?q=markdownlint
 [codimd]: https://github.com/hackmdio/codimd
 [codimd-search]: https://github.com/hackmdio/codimd/search?q=markdownlint
 [content-linter]: https://docs.github.com/en/contributing/collaborating-on-github-docs/using-the-content-linter

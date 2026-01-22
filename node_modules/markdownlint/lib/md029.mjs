@@ -11,13 +11,17 @@ const listStyleExamples = {
 };
 
 /**
- * Gets the value of an ordered list item prefix token.
+ * Gets the column and text of an ordered list item prefix token.
  *
  * @param {import("markdownlint").MicromarkToken} listItemPrefix List item prefix token.
- * @returns {number} List item value.
+ * @returns {{column: number, value: number}} List item value column and text.
  */
 function getOrderedListItemValue(listItemPrefix) {
-  return Number(getDescendantsByType(listItemPrefix, [ "listItemValue" ])[0].text);
+  const listItemValue = getDescendantsByType(listItemPrefix, [ "listItemValue" ])[0];
+  return {
+    "column": listItemValue.startColumn,
+    "value": Number(listItemValue.text)
+  };
 }
 
 /** @type {import("markdownlint").Rule} */
@@ -27,34 +31,40 @@ export default {
   "tags": [ "ol" ],
   "parser": "micromark",
   "function": function MD029(params, onError) {
-    const style = String(params.config.style || "one_or_ordered");
+    const style = String(params.config.style);
     for (const listOrdered of filterByTypesCached([ "listOrdered" ])) {
       const listItemPrefixes = getDescendantsByType(listOrdered, [ "listItemPrefix" ]);
       let expected = 1;
       let incrementing = false;
       // Check for incrementing number pattern 1/2/3 or 0/1/2
       if (listItemPrefixes.length >= 2) {
-        const firstValue = getOrderedListItemValue(listItemPrefixes[0]);
-        const secondValue = getOrderedListItemValue(listItemPrefixes[1]);
-        if ((secondValue !== 1) || (firstValue === 0)) {
+        const first = getOrderedListItemValue(listItemPrefixes[0]);
+        const second = getOrderedListItemValue(listItemPrefixes[1]);
+        if ((second.value !== 1) || (first.value === 0)) {
           incrementing = true;
-          if (firstValue === 0) {
+          if (first.value === 0) {
             expected = 0;
           }
         }
       }
       // Determine effective style
-      let listStyle = style;
-      if (listStyle === "one_or_ordered") {
-        listStyle = incrementing ? "ordered" : "one";
-      } else if (listStyle === "zero") {
+      const listStyle = ((style === "one") || (style === "ordered") || (style === "zero")) ?
+        style :
+        (incrementing ? "ordered" : "one");
+      if (listStyle === "zero") {
         expected = 0;
       } else if (listStyle === "one") {
         expected = 1;
       }
       // Validate each list item marker
       for (const listItemPrefix of listItemPrefixes) {
-        const actual = getOrderedListItemValue(listItemPrefix);
+        const orderedListItemValue = getOrderedListItemValue(listItemPrefix);
+        const actual = orderedListItemValue.value;
+        const fixInfo = {
+          "editColumn": orderedListItemValue.column,
+          "deleteCount": orderedListItemValue.value.toString().length,
+          "insertText": expected.toString()
+        };
         addErrorDetailIf(
           onError,
           listItemPrefix.startLine,
@@ -62,7 +72,8 @@ export default {
           actual,
           "Style: " + listStyleExamples[listStyle],
           undefined,
-          [ listItemPrefix.startColumn, listItemPrefix.endColumn - listItemPrefix.startColumn ]
+          [ listItemPrefix.startColumn, listItemPrefix.endColumn - listItemPrefix.startColumn ],
+          fixInfo
         );
         if (listStyle === "ordered") {
           expected++;

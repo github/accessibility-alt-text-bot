@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.40.0
+
+- Improve MD011/MD013/MD051/MD060
+- Update dependencies
+
+## 0.39.0
+
+- Add MD060/table-column-style
+- Improve MD001/MD007/MD009/MD010/MD029/MD033/MD037/MD059
+- Add support for reporting violations as severity `warning`
+- Deprecate `resultVersion` and `toString` (breaking change)
+- Improve type definitions
+- Improve demo web page
+- Update dependencies
+
 ## 0.38.0
 
 - Add MD059/descriptive-link-text
