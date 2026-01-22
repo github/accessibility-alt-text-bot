@@ -26,62 +26,91 @@ export function lintSync(options: Options | null): LintResults;
  * @param {Configuration} config Configuration object.
  * @param {string} file Configuration file name.
  * @param {ConfigurationParser[] | undefined} parsers Parsing function(s).
- * @param {Object} fs File system implementation.
+ * @param {FsLike} fs File system implementation.
  * @returns {Promise<Configuration>} Configuration object.
  */
-export function extendConfigPromise(config: Configuration, file: string, parsers: ConfigurationParser[] | undefined, fs: any): Promise<Configuration>;
+export function extendConfigPromise(config: Configuration, file: string, parsers: ConfigurationParser[] | undefined, fs: FsLike): Promise<Configuration>;
 /**
  * Read specified configuration file.
  *
  * @param {string} file Configuration file name.
- * @param {ConfigurationParser[] | ReadConfigCallback} [parsers] Parsing
- * function(s).
- * @param {Object} [fs] File system implementation.
+ * @param {ConfigurationParser[] | ReadConfigCallback} [parsers] Parsing function(s).
+ * @param {FsLike | ReadConfigCallback} [fs] File system implementation.
  * @param {ReadConfigCallback} [callback] Callback (err, result) function.
  * @returns {void}
  */
-export function readConfigAsync(file: string, parsers?: ConfigurationParser[] | ReadConfigCallback, fs?: any, callback?: ReadConfigCallback): void;
+export function readConfigAsync(file: string, parsers?: ConfigurationParser[] | ReadConfigCallback, fs?: FsLike | ReadConfigCallback, callback?: ReadConfigCallback): void;
 /**
  * Read specified configuration file.
  *
  * @param {string} file Configuration file name.
  * @param {ConfigurationParser[]} [parsers] Parsing function(s).
- * @param {Object} [fs] File system implementation.
+ * @param {FsLike} [fs] File system implementation.
  * @returns {Promise<Configuration>} Configuration object.
  */
-export function readConfigPromise(file: string, parsers?: ConfigurationParser[], fs?: any): Promise<Configuration>;
+export function readConfigPromise(file: string, parsers?: ConfigurationParser[], fs?: FsLike): Promise<Configuration>;
 /**
  * Read specified configuration file.
  *
  * @param {string} file Configuration file name.
  * @param {ConfigurationParser[]} [parsers] Parsing function(s).
- * @param {Object} [fs] File system implementation.
+ * @param {FsLike} [fs] File system implementation.
  * @returns {Configuration} Configuration object.
  */
-export function readConfigSync(file: string, parsers?: ConfigurationParser[], fs?: any): Configuration;
+export function readConfigSync(file: string, parsers?: ConfigurationParser[], fs?: FsLike): Configuration;
 /**
  * Applies the specified fix to a Markdown content line.
  *
  * @param {string} line Line of Markdown content.
- * @param {RuleOnErrorFixInfo} fixInfo RuleOnErrorFixInfo instance.
+ * @param {FixInfo} fixInfo FixInfo instance.
  * @param {string} [lineEnding] Line ending to use.
  * @returns {string | null} Fixed content or null if deleted.
  */
-export function applyFix(line: string, fixInfo: RuleOnErrorFixInfo, lineEnding?: string): string | null;
+export function applyFix(line: string, fixInfo: FixInfo, lineEnding?: string): string | null;
 /**
  * Applies as many of the specified fixes as possible to Markdown content.
  *
  * @param {string} input Lines of Markdown content.
- * @param {RuleOnErrorInfo[]} errors RuleOnErrorInfo instances.
+ * @param {LintError[]} errors LintError instances.
  * @returns {string} Fixed content.
  */
-export function applyFixes(input: string, errors: RuleOnErrorInfo[]): string;
+export function applyFixes(input: string, errors: LintError[]): string;
 /**
  * Gets the (semantic) version of the library.
  *
  * @returns {string} SemVer string.
  */
 export function getVersion(): string;
+/**
+ * Result object for removeFrontMatter.
+ */
+export type RemoveFrontMatterResult = {
+    /**
+     * Markdown content.
+     */
+    content: string;
+    /**
+     * Front matter lines.
+     */
+    frontMatterLines: string[];
+};
+/**
+ * Result object for getEffectiveConfig.
+ */
+export type GetEffectiveConfigResult = {
+    /**
+     * Effective configuration.
+     */
+    effectiveConfig: Configuration;
+    /**
+     * Rules enabled.
+     */
+    rulesEnabled: Map<string, boolean>;
+    /**
+     * Rules severity.
+     */
+    rulesSeverity: Map<string, "error" | "warning">;
+};
 /**
  * Result object for getEnabledRulesPerLineNumber.
  */
@@ -93,11 +122,36 @@ export type EnabledRulesPerLineNumberResult = {
     /**
      * Enabled rules per line number.
      */
-    enabledRulesPerLineNumber: any[];
+    enabledRulesPerLineNumber: Map<string, boolean>[];
     /**
      * Enabled rule list.
      */
     enabledRuleList: Rule[];
+    /**
+     * Rules severity.
+     */
+    rulesSeverity: Map<string, "error" | "warning">;
+};
+/**
+ * Node fs instance (or compatible object).
+ */
+export type FsLike = {
+    /**
+     * access method.
+     */
+    access: (path: string, callback: (err: Error) => void) => void;
+    /**
+     * accessSync method.
+     */
+    accessSync: (path: string) => void;
+    /**
+     * readFile method.
+     */
+    readFile: (path: string, encoding: string, callback: (err: Error, data: string) => void) => void;
+    /**
+     * readFileSync method.
+     */
+    readFileSync: (path: string, encoding: string) => string;
 };
 /**
  * Function to implement rule logic.
@@ -321,27 +375,6 @@ export type RuleOnErrorFixInfo = {
     insertText?: string;
 };
 /**
- * RuleOnErrorInfo with all optional properties present.
- */
-export type RuleOnErrorFixInfoNormalized = {
-    /**
-     * Line number (1-based).
-     */
-    lineNumber: number;
-    /**
-     * Column of the fix (1-based).
-     */
-    editColumn: number;
-    /**
-     * Count of characters to delete.
-     */
-    deleteCount: number;
-    /**
-     * Text to insert (after deleting).
-     */
-    insertText: string;
-};
-/**
  * Rule definition.
  */
 export type Rule = {
@@ -418,7 +451,7 @@ export type Options = {
     /**
      * File system implementation.
      */
-    fs?: any;
+    fs?: FsLike;
     /**
      * True to catch exceptions.
      */
@@ -432,10 +465,6 @@ export type Options = {
      */
     noInlineConfig?: boolean;
     /**
-     * Results object version.
-     */
-    resultVersion?: number;
-    /**
      * Strings to lint.
      */
     strings?: {
@@ -447,11 +476,7 @@ export type Options = {
  */
 export type Plugin = any[];
 /**
- * Function to pretty-print lint results.
- */
-export type ToStringCallback = (ruleAliases?: boolean) => string;
-/**
- * Lint results (for resultVersion 3).
+ * Lint results.
  */
 export type LintResults = {
     [x: string]: LintError[];
@@ -475,23 +500,27 @@ export type LintError = {
     /**
      * Link to more information.
      */
-    ruleInformation: string;
+    ruleInformation: string | null;
     /**
      * Detail about the error.
      */
-    errorDetail: string;
+    errorDetail: string | null;
     /**
      * Context for the error.
      */
-    errorContext: string;
+    errorContext: string | null;
     /**
      * Column number (1-based) and length.
      */
-    errorRange: number[];
+    errorRange: number[] | null;
     /**
      * Fix information.
      */
-    fixInfo?: FixInfo;
+    fixInfo: FixInfo | null;
+    /**
+     * Severity of the error.
+     */
+    severity: "error" | "warning";
 };
 /**
  * Fix information.
@@ -513,6 +542,27 @@ export type FixInfo = {
      * Text to insert (after deleting).
      */
     insertText?: string;
+};
+/**
+ * FixInfo with all optional properties present.
+ */
+export type FixInfoNormalized = {
+    /**
+     * Line number (1-based).
+     */
+    lineNumber: number;
+    /**
+     * Column of the fix (1-based).
+     */
+    editColumn: number;
+    /**
+     * Count of characters to delete.
+     */
+    deleteCount: number;
+    /**
+     * Text to insert (after deleting).
+     */
+    insertText: string;
 };
 /**
  * Called with the result of linting a string or document.

@@ -24,15 +24,17 @@ function validateRuleList(ruleList, synchronous) {
     // No need to validate if only using built-in rules
     return result;
   }
+  /** @type {Object.<string, boolean>} */
   const allIds = {};
   for (const [ index, rule ] of ruleList.entries()) {
     const customIndex = index - rules.length;
-    // eslint-disable-next-line jsdoc/require-jsdoc
-    function newError(property, value) {
+    // eslint-disable-next-line jsdoc/reject-any-type, jsdoc/require-jsdoc
+    function newError(/** @type {string} */ property, /** @type {any} */ value) {
       return new Error(
         `Property '${property}' of custom rule at index ${customIndex} is incorrect: '${value}'.`);
     }
     for (const property of [ "names", "tags" ]) {
+      // @ts-ignore
       const value = rule[property];
       if (!result &&
         (!value || !Array.isArray(value) || (value.length === 0) ||
@@ -45,6 +47,7 @@ function validateRuleList(ruleList, synchronous) {
       [ "function", "function" ]
     ]) {
       const property = propertyInfo[0];
+      // @ts-ignore
       const value = rule[property];
       if (!result && (!value || (typeof value !== propertyInfo[1]))) {
         result = newError(property, value);
@@ -108,9 +111,17 @@ function validateRuleList(ruleList, synchronous) {
  * @returns {LintResults} New LintResults instance.
  */
 function newResults(ruleList) {
-  const lintResults = {};
-  // eslint-disable-next-line jsdoc/require-jsdoc
+  /**
+   * Returns the string representation of a LintResults instance.
+   *
+   * @param {boolean} useAlias True if rule alias should be used instead of name.
+   * @returns {string} String representation of the instance.
+   * @this {LintResults}
+   */
   function toString(useAlias) {
+    // eslint-disable-next-line consistent-this, unicorn/no-this-assignment
+    const lintResults = this;
+    /** @type {Object.<string, Rule> | null} */
     let ruleNameToRule = null;
     const results = [];
     const keys = Object.keys(lintResults);
@@ -121,6 +132,7 @@ function newResults(ruleList) {
         for (const result of fileResults) {
           const ruleMoniker = result.ruleNames ?
             result.ruleNames.join("/") :
+            // @ts-ignore
             (result.ruleName + "/" + result.ruleAlias);
           results.push(
             file + ": " +
@@ -161,19 +173,29 @@ function newResults(ruleList) {
     }
     return results.join("\n");
   }
+  const lintResults = {};
   Object.defineProperty(lintResults, "toString", { "value": toString });
   // @ts-ignore
   return lintResults;
 }
 
 /**
+ * Result object for removeFrontMatter.
+ *
+ * @typedef {Object} RemoveFrontMatterResult
+ * @property {string} content Markdown content.
+ * @property {string[]} frontMatterLines Front matter lines.
+ */
+
+/**
  * Remove front matter (if present at beginning of content).
  *
  * @param {string} content Markdown content.
  * @param {RegExp | null} frontMatter Regular expression to match front matter.
- * @returns {Object} Trimmed content and front matter lines.
+ * @returns {RemoveFrontMatterResult} Trimmed content and front matter lines.
  */
 function removeFrontMatter(content, frontMatter) {
+  /** @type {string[]} */
   let frontMatterLines = [];
   if (frontMatter) {
     const frontMatterMatch = content.match(frontMatter);
@@ -200,6 +222,7 @@ function removeFrontMatter(content, frontMatter) {
  * @returns {Object.<string, string[]>} Map of alias to rule name.
  */
 function mapAliasToRuleNames(ruleList) {
+  /** @type {Object.<string, string[]>} */
   const aliasToRuleNames = {};
   // const tagToRuleNames = {};
   for (const rule of ruleList) {
@@ -230,43 +253,86 @@ function mapAliasToRuleNames(ruleList) {
 }
 
 /**
+ * Result object for getEffectiveConfig.
+ *
+ * @typedef {Object} GetEffectiveConfigResult
+ * @property {Configuration} effectiveConfig Effective configuration.
+ * @property {Map<string, boolean>} rulesEnabled Rules enabled.
+ * @property {Map<string, "error" | "warning">} rulesSeverity Rules severity.
+ */
+
+/**
  * Apply (and normalize) configuration object.
  *
  * @param {Rule[]} ruleList List of rules.
  * @param {Configuration} config Configuration object.
- * @param {Object.<string, string[]>} aliasToRuleNames Map of alias to rule
- * names.
- * @returns {Configuration} Effective configuration.
+ * @param {Object.<string, string[]>} aliasToRuleNames Map of alias to rule names.
+ * @returns {GetEffectiveConfigResult} Effective configuration and rule severities.
  */
 function getEffectiveConfig(ruleList, config, aliasToRuleNames) {
-  const defaultKey = Object.keys(config).filter(
-    (key) => key.toUpperCase() === "DEFAULT"
-  );
-  const ruleDefault = (defaultKey.length === 0) || !!config[defaultKey[0]];
+  let ruleDefaultEnable = true;
+  /** @type {"error" | "warning"} */
+  let ruleDefaultSeverity = "error";
+  Object.entries(config).every(([ key, value ]) => {
+    if (key.toUpperCase() === "DEFAULT") {
+      ruleDefaultEnable = !!value;
+      if (value === "warning") {
+        ruleDefaultSeverity = "warning";
+      }
+      return false;
+    }
+    return true;
+  });
   /** @type {Configuration} */
   const effectiveConfig = {};
-  for (const rule of ruleList) {
-    const ruleName = rule.names[0].toUpperCase();
-    effectiveConfig[ruleName] = ruleDefault;
+  /** @type {Map<string, boolean>} */
+  const rulesEnabled = new Map();
+  /** @type {Map<string, "error" | "warning">} */
+  const rulesSeverity = new Map();
+  const emptyObject = Object.freeze({});
+  for (const ruleName of ruleList.map((rule) => rule.names[0].toUpperCase())) {
+    effectiveConfig[ruleName] = emptyObject;
+    rulesEnabled.set(ruleName, ruleDefaultEnable);
+    rulesSeverity.set(ruleName, ruleDefaultSeverity);
   }
   // for (const ruleName of deprecatedRuleNames) {
   //   effectiveConfig[ruleName] = false;
   // }
-  for (const key of Object.keys(config)) {
-    let value = config[key];
-    if (value) {
-      if (!(value instanceof Object)) {
-        value = {};
-      }
-    } else {
-      value = false;
-    }
+  for (const [ key, value ] of Object.entries(config)) {
     const keyUpper = key.toUpperCase();
+    /** @type {boolean} */
+    let enabled = false;
+    /** @type {"error" | "warning"} */
+    let severity = "error";
+    let effectiveValue = {};
+    if (value) {
+      if (value instanceof Object) {
+        /** @type {{ enabled?: boolean, severity?: "error" | "warning" }} */
+        const valueObject = value;
+        enabled = (valueObject.enabled === undefined) ? true : !!valueObject.enabled;
+        severity = (valueObject.severity === "warning") ? "warning" : "error";
+        effectiveValue = Object.fromEntries(
+          Object.entries(value).filter(
+            ([ k ]) => (k !== "enabled") && (k !== "severity")
+          )
+        );
+      } else {
+        enabled = true;
+        severity = (value === "warning") ? "warning" : "error";
+      }
+    }
     for (const ruleName of (aliasToRuleNames[keyUpper] || [])) {
-      effectiveConfig[ruleName] = value;
+      Object.freeze(effectiveValue);
+      effectiveConfig[ruleName] = effectiveValue;
+      rulesEnabled.set(ruleName, enabled);
+      rulesSeverity.set(ruleName, severity);
     }
   }
-  return effectiveConfig;
+  return {
+    effectiveConfig,
+    rulesEnabled,
+    rulesSeverity
+  };
 }
 
 /**
@@ -274,8 +340,9 @@ function getEffectiveConfig(ruleList, config, aliasToRuleNames) {
  *
  * @typedef {Object} EnabledRulesPerLineNumberResult
  * @property {Configuration} effectiveConfig Effective configuration.
- * @property {any[]} enabledRulesPerLineNumber Enabled rules per line number.
+ * @property {Map<string, boolean>[]} enabledRulesPerLineNumber Enabled rules per line number.
  * @property {Rule[]} enabledRuleList Enabled rule list.
+ * @property {Map<string, "error" | "warning">} rulesSeverity Rules severity.
  */
 
 /**
@@ -287,8 +354,7 @@ function getEffectiveConfig(ruleList, config, aliasToRuleNames) {
  * @param {boolean} noInlineConfig Whether to allow inline configuration.
  * @param {Configuration} config Configuration object.
  * @param {ConfigurationParser[] | undefined} configParsers Configuration parsers.
- * @param {Object.<string, string[]>} aliasToRuleNames Map of alias to rule
- * names.
+ * @param {Object.<string, string[]>} aliasToRuleNames Map of alias to rule names.
  * @returns {EnabledRulesPerLineNumberResult} Effective configuration and enabled rules per line number.
  */
 function getEnabledRulesPerLineNumber(
@@ -300,13 +366,14 @@ function getEnabledRulesPerLineNumber(
   configParsers,
   aliasToRuleNames) {
   // Shared variables
-  let enabledRules = {};
-  let capturedRules = {};
-  const allRuleNames = [];
+  /** @type {Map<string, boolean>} */
+  let enabledRules = new Map();
+  /** @type {Map<string, boolean>} */
+  let capturedRules = enabledRules;
   const enabledRulesPerLineNumber = new Array(1 + frontMatterLines.length);
   // Helper functions
   // eslint-disable-next-line jsdoc/require-jsdoc
-  function handleInlineConfig(input, forEachMatch, forEachLine) {
+  function handleInlineConfig(/** @type {string[]} */ input, /** @type {(act: string, par: string, ind: number) => void} */ forEachMatch, /** @type {(() => void)|undefined} */ forEachLine = undefined) {
     for (const [ lineIndex, line ] of input.entries()) {
       if (!noInlineConfig) {
         let match = null;
@@ -327,7 +394,7 @@ function getEnabledRulesPerLineNumber(
     }
   }
   // eslint-disable-next-line jsdoc/require-jsdoc
-  function configureFile(action, parameter) {
+  function configureFile(/** @type {string} */ action, /** @type {string} */ parameter) {
     if (action === "CONFIGURE-FILE") {
       const { "config": parsed } = parseConfiguration(
         "CONFIGURE-FILE", parameter, configParsers
@@ -341,26 +408,27 @@ function getEnabledRulesPerLineNumber(
     }
   }
   // eslint-disable-next-line jsdoc/require-jsdoc
-  function applyEnableDisable(action, parameter, state) {
-    state = { ...state };
+  function applyEnableDisable(/** @type {string} */ action, /** @type {string} */ parameter, /** @type {Map<string, boolean>} */ state) {
+    state = new Map(state);
     const enabled = (action.startsWith("ENABLE"));
     const trimmed = parameter && parameter.trim();
+    // eslint-disable-next-line no-use-before-define
     const items = trimmed ? trimmed.toUpperCase().split(/\s+/) : allRuleNames;
     for (const nameUpper of items) {
       for (const ruleName of (aliasToRuleNames[nameUpper] || [])) {
-        state[ruleName] = enabled;
+        state.set(ruleName, enabled);
       }
     }
     return state;
   }
   // eslint-disable-next-line jsdoc/require-jsdoc
-  function enableDisableFile(action, parameter) {
+  function enableDisableFile(/** @type {string} */ action, /** @type {string} */ parameter) {
     if ((action === "ENABLE-FILE") || (action === "DISABLE-FILE")) {
       enabledRules = applyEnableDisable(action, parameter, enabledRules);
     }
   }
   // eslint-disable-next-line jsdoc/require-jsdoc
-  function captureRestoreEnableDisable(action, parameter) {
+  function captureRestoreEnableDisable(/** @type {string} */ action, /** @type {string} */ parameter) {
     if (action === "CAPTURE") {
       capturedRules = enabledRules;
     } else if (action === "RESTORE") {
@@ -374,7 +442,7 @@ function getEnabledRulesPerLineNumber(
     enabledRulesPerLineNumber.push(enabledRules);
   }
   // eslint-disable-next-line jsdoc/require-jsdoc
-  function disableLineNextLine(action, parameter, lineNumber) {
+  function disableLineNextLine(/** @type {string} */ action, /** @type {string} */ parameter, /** @type {number} */ lineNumber) {
     const disableLine = (action === "DISABLE-LINE");
     const disableNextLine = (action === "DISABLE-NEXT-LINE");
     if (disableLine || disableNextLine) {
@@ -390,29 +458,24 @@ function getEnabledRulesPerLineNumber(
   }
   // Handle inline comments
   handleInlineConfig([ lines.join("\n") ], configureFile);
-  const effectiveConfig = getEffectiveConfig(
-    ruleList, config, aliasToRuleNames);
-  for (const rule of ruleList) {
-    const ruleName = rule.names[0].toUpperCase();
-    allRuleNames.push(ruleName);
-    enabledRules[ruleName] = !!effectiveConfig[ruleName];
-  }
+  const { effectiveConfig, rulesEnabled, rulesSeverity } = getEffectiveConfig(ruleList, config, aliasToRuleNames);
+  const allRuleNames = [ ...rulesEnabled.keys() ];
+  enabledRules = new Map(rulesEnabled);
   capturedRules = enabledRules;
   handleInlineConfig(lines, enableDisableFile);
   handleInlineConfig(lines, captureRestoreEnableDisable, updateLineState);
   handleInlineConfig(lines, disableLineNextLine);
   // Create the list of rules that are used at least once
-  const enabledRuleList = [];
-  for (const [ index, ruleName ] of allRuleNames.entries()) {
-    if (enabledRulesPerLineNumber.some((enabledRulesForLine) => enabledRulesForLine[ruleName])) {
-      enabledRuleList.push(ruleList[index]);
-    }
-  }
+  const enabledRuleList = ruleList.filter((rule) => {
+    const ruleName = rule.names[0].toUpperCase();
+    return enabledRulesPerLineNumber.some((enabledRulesForLine) => enabledRulesForLine.get(ruleName));
+  });
   // Return results
   return {
     effectiveConfig,
     enabledRulesPerLineNumber,
-    enabledRuleList
+    enabledRuleList,
+    rulesSeverity
   };
 }
 
@@ -429,7 +492,6 @@ function getEnabledRulesPerLineNumber(
  * @param {RegExp | null} frontMatter Regular expression for front matter.
  * @param {boolean} handleRuleFailures Whether to handle exceptions in rules.
  * @param {boolean} noInlineConfig Whether to allow inline configuration.
- * @param {number} resultVersion Version of the LintResults object to return.
  * @param {boolean} synchronous Whether to execute synchronously.
  * @param {LintContentCallback} callback Callback (err, result) function.
  * @returns {void}
@@ -445,11 +507,11 @@ function lintContent(
   frontMatter,
   handleRuleFailures,
   noInlineConfig,
-  resultVersion,
   synchronous,
   callback) {
   // Provide a consistent error-reporting callback
-  const callbackError = (error) => callback(error instanceof Error ? error : new Error(error));
+  // eslint-disable-next-line jsdoc/reject-any-type
+  const callbackError = (/** @type {any} */ error) => callback(error instanceof Error ? error : new Error(error));
   // Remove UTF-8 byte order marker (if present)
   content = content.replace(/^\uFEFF/, "");
   // Remove front matter
@@ -457,7 +519,7 @@ function lintContent(
   const { frontMatterLines } = removeFrontMatterResult;
   content = removeFrontMatterResult.content;
   // Get enabled rules per line (with HTML comments present)
-  const { effectiveConfig, enabledRulesPerLineNumber, enabledRuleList } =
+  const { effectiveConfig, enabledRulesPerLineNumber, enabledRuleList, rulesSeverity } =
     getEnabledRulesPerLineNumber(
       ruleList,
       content.split(helpers.newLineRe),
@@ -484,7 +546,7 @@ function lintContent(
   // Parse content into lines and get markdown-it tokens
   const lines = content.split(helpers.newLineRe);
   // Function to run after fetching markdown-it tokens (when needed)
-  const lintContentInternal = (markdownitTokens) => {
+  const lintContentInternal = (/** @type {MarkdownItToken[]} */ markdownitTokens) => {
     // Create (frozen) parameters for rules
     /** @type {MarkdownParsers} */
     // @ts-ignore
@@ -515,7 +577,8 @@ function lintContent(
       "config": null
     });
     // Function to run for each rule
-    let results = [];
+    /** @type {LintError[]} */
+    const results = [];
     /**
      * @param {Rule} rule Rule.
      * @returns {Promise<void> | null} Promise.
@@ -533,19 +596,21 @@ function lintContent(
       } else if (rule.parser === "micromark") {
         parsers = parsersMicromark;
       }
-      const params = {
+      const params = Object.freeze({
         ...paramsBase,
         ...tokens,
         parsers,
+        /** @type {RuleConfiguration} */
+        // @ts-ignore
         "config": effectiveConfig[ruleName]
-      };
+      });
       // eslint-disable-next-line jsdoc/require-jsdoc
-      function throwError(property) {
+      function throwError(/** @type {string} */ property) {
         throw new Error(
           `Value of '${property}' passed to onError by '${ruleName}' is incorrect for '${name}'.`);
       }
       // eslint-disable-next-line jsdoc/require-jsdoc
-      function onError(errorInfo) {
+      function onError(/** @type {RuleOnErrorInfo} */ errorInfo) {
         if (!errorInfo ||
           !helpers.isNumber(errorInfo.lineNumber) ||
           (errorInfo.lineNumber < 1) ||
@@ -553,7 +618,7 @@ function lintContent(
           throwError("lineNumber");
         }
         const lineNumber = errorInfo.lineNumber + frontMatterLines.length;
-        if (!enabledRulesPerLineNumber[lineNumber][ruleName]) {
+        if (!enabledRulesPerLineNumber[lineNumber].get(ruleName)) {
           return;
         }
         if (errorInfo.detail &&
@@ -623,17 +688,19 @@ function lintContent(
         const information = errorInfo.information || rule.information;
         results.push({
           lineNumber,
-          "ruleName": rule.names[0],
           "ruleNames": rule.names,
           "ruleDescription": rule.description,
           "ruleInformation": information ? information.href : null,
-          "errorDetail": errorInfo.detail || null,
-          "errorContext": errorInfo.context || null,
+          "errorDetail": errorInfo.detail?.replace(helpers.newLineRe, " ") || null,
+          "errorContext": errorInfo.context?.replace(helpers.newLineRe, " ") || null,
           "errorRange": errorInfo.range ? [ ...errorInfo.range ] : null,
-          "fixInfo": fixInfo ? cleanFixInfo : null
+          "fixInfo": fixInfo ? cleanFixInfo : null,
+          // @ts-ignore
+          "severity": rulesSeverity.get(ruleName)
         });
       }
       // Call (possibly external) rule function to report errors
+      // @ts-ignore
       const catchCallsOnError = (error) => onError({
         "lineNumber": 1,
         "detail": `This rule threw an exception: ${error.message || error}`
@@ -650,7 +717,7 @@ function lintContent(
       // Synchronous rule
       try {
         invokeRuleFunction();
-      } catch (error) {
+      } catch(error) {
         if (handleRuleFailures) {
           catchCallsOnError(error);
         } else {
@@ -662,46 +729,9 @@ function lintContent(
     const formatResults = () => {
       // Sort results by rule name by line number
       results.sort((a, b) => (
-        a.ruleName.localeCompare(b.ruleName) ||
+        a.ruleNames[0].localeCompare(b.ruleNames[0]) ||
         a.lineNumber - b.lineNumber
       ));
-      if (resultVersion < 3) {
-        // Remove fixInfo and multiple errors for the same rule and line number
-        const noPrevious = {
-          "ruleName": null,
-          "lineNumber": -1
-        };
-        results = results.filter((error, index, array) => {
-          delete error.fixInfo;
-          const previous = array[index - 1] || noPrevious;
-          return (
-            (error.ruleName !== previous.ruleName) ||
-            (error.lineNumber !== previous.lineNumber)
-          );
-        });
-      }
-      if (resultVersion === 0) {
-        // Return a dictionary of rule->[line numbers]
-        const dictionary = {};
-        for (const error of results) {
-          const ruleLines = dictionary[error.ruleName] || [];
-          ruleLines.push(error.lineNumber);
-          dictionary[error.ruleName] = ruleLines;
-        }
-        // @ts-ignore
-        results = dictionary;
-      } else if (resultVersion === 1) {
-        // Use ruleAlias instead of ruleNames
-        for (const error of results) {
-          error.ruleAlias = error.ruleNames[1] || error.ruleName;
-          delete error.ruleNames;
-        }
-      } else {
-        // resultVersion 2 or 3: Remove unwanted ruleName
-        for (const error of results) {
-          delete error.ruleName;
-        }
-      }
       return results;
     };
     // Run all rules
@@ -721,7 +751,7 @@ function lintContent(
       } else {
         callbackSuccess();
       }
-    } catch (error) {
+    } catch(error) {
       callbackError(error);
     } finally {
       cacheInitialize();
@@ -759,8 +789,7 @@ function lintContent(
  * @param {RegExp | null} frontMatter Regular expression for front matter.
  * @param {boolean} handleRuleFailures Whether to handle exceptions in rules.
  * @param {boolean} noInlineConfig Whether to allow inline configuration.
- * @param {number} resultVersion Version of the LintResults object to return.
- * @param {Object} fs File system implementation.
+ * @param {FsLike} fs File system implementation.
  * @param {boolean} synchronous Whether to execute synchronously.
  * @param {LintContentCallback} callback Callback (err, result) function.
  * @returns {void}
@@ -775,12 +804,11 @@ function lintFile(
   frontMatter,
   handleRuleFailures,
   noInlineConfig,
-  resultVersion,
   fs,
   synchronous,
   callback) {
   // eslint-disable-next-line jsdoc/require-jsdoc
-  function lintContentWrapper(err, content) {
+  function lintContentWrapper(/** @type {Error | null} */ err, /** @type {string} */ content) {
     if (err) {
       return callback(err);
     }
@@ -795,7 +823,6 @@ function lintFile(
       frontMatter,
       handleRuleFailures,
       noInlineConfig,
-      resultVersion,
       synchronous,
       callback
     );
@@ -820,6 +847,8 @@ function lintInput(options, synchronous, callback) {
   // Normalize inputs
   options = options || {};
   callback = callback || function noop() {};
+  /** @type {Rule[]} */
+  // @ts-ignore
   const customRuleList =
     [ options.customRules || [] ]
       .flat()
@@ -839,6 +868,7 @@ function lintInput(options, synchronous, callback) {
     callback(ruleErr);
     return;
   }
+  /** @type {string[]} */
   let files = [];
   if (Array.isArray(options.files)) {
     files = [ ...options.files ];
@@ -854,12 +884,14 @@ function lintInput(options, synchronous, callback) {
     options.frontMatter;
   const handleRuleFailures = !!options.handleRuleFailures;
   const noInlineConfig = !!options.noInlineConfig;
-  const resultVersion = (options.resultVersion === undefined) ?
-    3 :
-    options.resultVersion;
+  // @ts-ignore
+  // eslint-disable-next-line dot-notation
+  const resultVersion = (options["resultVersion"] === undefined) ? 3 : options["resultVersion"];
   const markdownItFactory =
     options.markdownItFactory ||
     (() => { throw new Error("The option 'markdownItFactory' was required (due to the option 'customRules' including a rule requiring the 'markdown-it' parser), but 'markdownItFactory' was not set."); });
+  /** @type {FsLike} */
+  // @ts-ignore
   const fs = options.fs || nodeFs;
   const aliasToRuleNames = mapAliasToRuleNames(ruleList);
   const results = newResults(ruleList);
@@ -867,14 +899,16 @@ function lintInput(options, synchronous, callback) {
   let concurrency = 0;
   // eslint-disable-next-line jsdoc/require-jsdoc
   function lintWorker() {
-    let currentItem = null;
+    /** @type {string | undefined} */
+    let currentItem = undefined;
     // eslint-disable-next-line jsdoc/require-jsdoc
-    function lintWorkerCallback(err, result) {
+    function lintWorkerCallback(/** @type {Error | null} */ err, /** @type {LintError[] | undefined} */ result) {
       concurrency--;
       if (err) {
         done = true;
         return callback(err);
       }
+      // @ts-ignore
       results[currentItem] = result;
       if (!synchronous) {
         lintWorker();
@@ -883,10 +917,9 @@ function lintInput(options, synchronous, callback) {
     }
     if (done) {
       // Abort for error or nothing left to do
-    } else if (files.length > 0) {
+    } else if ((currentItem = files.shift())) {
       // Lint next file
       concurrency++;
-      currentItem = files.shift();
       lintFile(
         ruleList,
         aliasToRuleNames,
@@ -897,7 +930,6 @@ function lintInput(options, synchronous, callback) {
         frontMatter,
         handleRuleFailures,
         noInlineConfig,
-        resultVersion,
         fs,
         synchronous,
         lintWorkerCallback
@@ -916,14 +948,22 @@ function lintInput(options, synchronous, callback) {
         frontMatter,
         handleRuleFailures,
         noInlineConfig,
-        resultVersion,
         synchronous,
         lintWorkerCallback
       );
     } else if (concurrency === 0) {
       // Finish
       done = true;
-      return callback(null, results);
+      // Deprecated: Convert results to specified resultVersion
+      let convertedResults = results;
+      if (resultVersion === 0) {
+        convertedResults = helpers.convertToResultVersion0(results);
+      } else if (resultVersion === 1) {
+        convertedResults = helpers.convertToResultVersion1(results);
+      } else if (resultVersion === 2) {
+        convertedResults = helpers.convertToResultVersion2(results);
+      }
+      return callback(null, convertedResults);
     }
     return null;
   }
@@ -994,14 +1034,23 @@ export function lintSync(options) {
 }
 
 /**
+ * Node fs instance (or compatible object).
+ *
+ * @typedef FsLike
+ * @property {(path: string, callback: (err: Error) => void) => void} access access method.
+ * @property {(path: string) => void} accessSync accessSync method.
+ * @property {(path: string, encoding: string, callback: (err: Error, data: string) => void) => void} readFile readFile method.
+ * @property {(path: string, encoding: string) => string} readFileSync readFileSync method.
+ */
+
+/**
  * Resolve referenced "extends" path in a configuration file
  * using path.resolve() with require.resolve() as a fallback.
  *
  * @param {string} configFile Configuration file name.
  * @param {string} referenceId Referenced identifier to resolve.
- * @param {Object} fs File system implementation.
- * @param {ResolveConfigExtendsCallback} callback Callback (err, result)
- * function.
+ * @param {FsLike} fs File system implementation.
+ * @param {ResolveConfigExtendsCallback} callback Callback (err, result) function.
  * @returns {void}
  */
 function resolveConfigExtends(configFile, referenceId, fs, callback) {
@@ -1029,7 +1078,7 @@ function resolveConfigExtends(configFile, referenceId, fs, callback) {
  *
  * @param {string} configFile Configuration file name.
  * @param {string} referenceId Referenced identifier to resolve.
- * @param {Object} fs File system implementation.
+ * @param {FsLike} fs File system implementation.
  * @returns {string} Resolved path to file.
  */
 function resolveConfigExtendsSync(configFile, referenceId, fs) {
@@ -1054,9 +1103,8 @@ function resolveConfigExtendsSync(configFile, referenceId, fs) {
  *
  * @param {Configuration} config Configuration object.
  * @param {string} file Configuration file name.
- * @param {ConfigurationParser[] | undefined} parsers Parsing
- * function(s).
- * @param {Object} fs File system implementation.
+ * @param {ConfigurationParser[] | undefined} parsers Parsing function(s).
+ * @param {FsLike} fs File system implementation.
  * @param {ReadConfigCallback} callback Callback (err, result) function.
  * @returns {void}
  */
@@ -1096,7 +1144,7 @@ function extendConfig(config, file, parsers, fs, callback) {
  * @param {Configuration} config Configuration object.
  * @param {string} file Configuration file name.
  * @param {ConfigurationParser[] | undefined} parsers Parsing function(s).
- * @param {Object} fs File system implementation.
+ * @param {FsLike} fs File system implementation.
  * @returns {Promise<Configuration>} Configuration object.
  */
 export function extendConfigPromise(config, file, parsers, fs) {
@@ -1115,16 +1163,17 @@ export function extendConfigPromise(config, file, parsers, fs) {
  * Read specified configuration file.
  *
  * @param {string} file Configuration file name.
- * @param {ConfigurationParser[] | ReadConfigCallback} [parsers] Parsing
- * function(s).
- * @param {Object} [fs] File system implementation.
+ * @param {ConfigurationParser[] | ReadConfigCallback} [parsers] Parsing function(s).
+ * @param {FsLike | ReadConfigCallback} [fs] File system implementation.
  * @param {ReadConfigCallback} [callback] Callback (err, result) function.
  * @returns {void}
  */
 export function readConfigAsync(file, parsers, fs, callback) {
   if (!callback) {
     if (fs) {
+      // @ts-ignore
       callback = fs;
+      // @ts-ignore
       fs = null;
     } else {
       // @ts-ignore
@@ -1133,12 +1182,12 @@ export function readConfigAsync(file, parsers, fs, callback) {
       parsers = null;
     }
   }
-  if (!fs) {
-    fs = nodeFs;
-  }
+  /** @type {FsLike} */
+  // @ts-ignore
+  const fsLike = fs || nodeFs;
   // Read file
   file = helpers.expandTildePath(file, os);
-  fs.readFile(file, "utf8", (err, content) => {
+  fsLike.readFile(file, "utf8", (err, content) => {
     if (err) {
       // @ts-ignore
       return callback(err);
@@ -1152,7 +1201,7 @@ export function readConfigAsync(file, parsers, fs, callback) {
     }
     // Extend configuration
     // @ts-ignore
-    return extendConfig(config, file, parsers, fs, callback);
+    return extendConfig(config, file, parsers, fsLike, callback);
   });
 }
 
@@ -1161,7 +1210,7 @@ export function readConfigAsync(file, parsers, fs, callback) {
  *
  * @param {string} file Configuration file name.
  * @param {ConfigurationParser[]} [parsers] Parsing function(s).
- * @param {Object} [fs] File system implementation.
+ * @param {FsLike} [fs] File system implementation.
  * @returns {Promise<Configuration>} Configuration object.
  */
 export function readConfigPromise(file, parsers, fs) {
@@ -1181,16 +1230,16 @@ export function readConfigPromise(file, parsers, fs) {
  *
  * @param {string} file Configuration file name.
  * @param {ConfigurationParser[]} [parsers] Parsing function(s).
- * @param {Object} [fs] File system implementation.
+ * @param {FsLike} [fs] File system implementation.
  * @returns {Configuration} Configuration object.
  */
 export function readConfigSync(file, parsers, fs) {
-  if (!fs) {
-    fs = nodeFs;
-  }
+  /** @type {FsLike} */
+  // @ts-ignore
+  const fsLike = fs || nodeFs;
   // Read file
   file = helpers.expandTildePath(file, os);
-  const content = fs.readFileSync(file, "utf8");
+  const content = fsLike.readFileSync(file, "utf8");
   // Try to parse file
   const { config, message } = parseConfiguration(file, content, parsers);
   if (!config) {
@@ -1204,7 +1253,7 @@ export function readConfigSync(file, parsers, fs) {
     const resolvedExtends = resolveConfigExtendsSync(
       file,
       helpers.expandTildePath(configExtends, os),
-      fs
+      fsLike
     );
     return {
       ...readConfigSync(resolvedExtends, parsers, fs),
@@ -1217,9 +1266,9 @@ export function readConfigSync(file, parsers, fs) {
 /**
  * Normalizes the fields of a RuleOnErrorFixInfo instance.
  *
- * @param {RuleOnErrorFixInfo} fixInfo RuleOnErrorFixInfo instance.
+ * @param {FixInfo} fixInfo RuleOnErrorFixInfo instance.
  * @param {number} [lineNumber] Line number.
- * @returns {RuleOnErrorFixInfoNormalized} Normalized RuleOnErrorFixInfo instance.
+ * @returns {FixInfoNormalized} Normalized RuleOnErrorFixInfo instance.
  */
 function normalizeFixInfo(fixInfo, lineNumber = 0) {
   return {
@@ -1234,7 +1283,7 @@ function normalizeFixInfo(fixInfo, lineNumber = 0) {
  * Applies the specified fix to a Markdown content line.
  *
  * @param {string} line Line of Markdown content.
- * @param {RuleOnErrorFixInfo} fixInfo RuleOnErrorFixInfo instance.
+ * @param {FixInfo} fixInfo FixInfo instance.
  * @param {string} [lineEnding] Line ending to use.
  * @returns {string | null} Fixed content or null if deleted.
  */
@@ -1250,7 +1299,7 @@ export function applyFix(line, fixInfo, lineEnding = "\n") {
  * Applies as many of the specified fixes as possible to Markdown content.
  *
  * @param {string} input Lines of Markdown content.
- * @param {RuleOnErrorInfo[]} errors RuleOnErrorInfo instances.
+ * @param {LintError[]} errors LintError instances.
  * @returns {string} Fixed content.
  */
 export function applyFixes(input, errors) {
@@ -1346,8 +1395,6 @@ export function getVersion() {
  * @returns {void}
  */
 
-/* eslint-disable jsdoc/valid-types */
-
 /**
  * Rule parameters.
  *
@@ -1359,8 +1406,6 @@ export function getVersion() {
  * @property {RuleConfiguration} config Rule configuration.
  * @property {string} version Version of the markdownlint library.
  */
-
-/* eslint-enable jsdoc/valid-types */
 
 /**
  * Markdown parser data.
@@ -1452,16 +1497,6 @@ export function getVersion() {
  */
 
 /**
- * RuleOnErrorInfo with all optional properties present.
- *
- * @typedef {Object} RuleOnErrorFixInfoNormalized
- * @property {number} lineNumber Line number (1-based).
- * @property {number} editColumn Column of the fix (1-based).
- * @property {number} deleteCount Count of characters to delete.
- * @property {string} insertText Text to insert (after deleting).
- */
-
-/**
  * Rule definition.
  *
  * @typedef {Object} Rule
@@ -1506,33 +1541,23 @@ export function getVersion() {
  * @property {Rule[] | Rule} [customRules] Custom rules.
  * @property {string[] | string} [files] Files to lint.
  * @property {RegExp | null} [frontMatter] Front matter pattern.
- * @property {Object} [fs] File system implementation.
+ * @property {FsLike} [fs] File system implementation.
  * @property {boolean} [handleRuleFailures] True to catch exceptions.
  * @property {MarkdownItFactory} [markdownItFactory] Function to create a markdown-it parser.
  * @property {boolean} [noInlineConfig] True to ignore HTML directives.
- * @property {number} [resultVersion] Results object version.
  * @property {Object.<string, string>} [strings] Strings to lint.
  */
 
 /**
  * A markdown-it plugin.
  *
- * @typedef {Array} Plugin
+ * @typedef {Object[]} Plugin
  */
 
 /**
- * Function to pretty-print lint results.
- *
- * @callback ToStringCallback
- * @param {boolean} [ruleAliases] True to use rule aliases.
- * @returns {string} Pretty-printed results.
- */
-
-/**
- * Lint results (for resultVersion 3).
+ * Lint results.
  *
  * @typedef {Object.<string, LintError[]>} LintResults
- * @property {ToStringCallback} toString String representation.
  */
 
 /**
@@ -1542,11 +1567,12 @@ export function getVersion() {
  * @property {number} lineNumber Line number (1-based).
  * @property {string[]} ruleNames Rule name(s).
  * @property {string} ruleDescription Rule description.
- * @property {string} ruleInformation Link to more information.
- * @property {string} errorDetail Detail about the error.
- * @property {string} errorContext Context for the error.
- * @property {number[]} errorRange Column number (1-based) and length.
- * @property {FixInfo} [fixInfo] Fix information.
+ * @property {string | null} ruleInformation Link to more information.
+ * @property {string | null} errorDetail Detail about the error.
+ * @property {string | null} errorContext Context for the error.
+ * @property {number[] | null} errorRange Column number (1-based) and length.
+ * @property {FixInfo | null} fixInfo Fix information.
+ * @property {"error" | "warning"} severity Severity of the error.
  */
 
 /**
@@ -1557,6 +1583,16 @@ export function getVersion() {
  * @property {number} [editColumn] Column of the fix (1-based).
  * @property {number} [deleteCount] Count of characters to delete.
  * @property {string} [insertText] Text to insert (after deleting).
+ */
+
+/**
+ * FixInfo with all optional properties present.
+ *
+ * @typedef {Object} FixInfoNormalized
+ * @property {number} lineNumber Line number (1-based).
+ * @property {number} editColumn Column of the fix (1-based).
+ * @property {number} deleteCount Count of characters to delete.
+ * @property {string} insertText Text to insert (after deleting).
  */
 
 /**
