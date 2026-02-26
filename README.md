@@ -30,7 +30,7 @@ Copy this workflow into any repo you want the `accessibility-alt-text-bot` to ru
 
 ```yml
 name: Accessibility-alt-text-bot
-on: 
+on:
   issues:
     types: [opened, edited]
   pull_request:
@@ -46,7 +46,7 @@ permissions:
   issues: write
   pull-requests: write
   discussions: write
-  
+
 jobs:
   accessibility_alt_text_bot:
     name: Check alt text is set on issue or pull requests
@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get action 'github/accessibility-alt-text-bot'
-        uses: github/accessibility-alt-text-bot@v1.7.1 # Set to latest
+        uses: github/accessibility-alt-text-bot@v1.7.2  # Set to latest
 ```
 
 ### Pin the action's version for stability
@@ -63,7 +63,7 @@ We recommend you pin the action to a specific version.
 This makes sure you stay on a stable version of this action.
 
 ```yml
-       uses: github/accessibility-alt-text-bot@v1.7.1
+       uses: github/accessibility-alt-text-bot@v1.7.2
 ```
 
 Replace the ref value with any commit hash.
@@ -80,7 +80,7 @@ If you would like to include more linting rules from the [markdownlint](https://
 ```yml
     steps:
       - name: Check alt text
-        uses: github/accessibility-alt-text-bot@v1.7.1
+        uses: github/accessibility-alt-text-bot@v1.7.2
         with:
           config: |
             no-default-alt-text: true,
