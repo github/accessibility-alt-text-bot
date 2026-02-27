@@ -30,7 +30,7 @@ Copy this workflow into any repo you want the `accessibility-alt-text-bot` to ru
 
 ```yml
 name: Accessibility-alt-text-bot
-on: 
+on:
   issues:
     types: [opened, edited]
   pull_request:
@@ -46,7 +46,7 @@ permissions:
   issues: write
   pull-requests: write
   discussions: write
-  
+
 jobs:
   accessibility_alt_text_bot:
     name: Check alt text is set on issue or pull requests
@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get action 'github/accessibility-alt-text-bot'
-        uses: github/accessibility-alt-text-bot@v1.7.1 # Set to latest
+        uses: github/accessibility-alt-text-bot@v1.7.2  # Set to latest
 ```
 
 ### Pin the action's version for stability
@@ -63,7 +63,7 @@ We recommend you pin the action to a specific version.
 This makes sure you stay on a stable version of this action.
 
 ```yml
-       uses: github/accessibility-alt-text-bot@v1.7.1
+       uses: github/accessibility-alt-text-bot@v1.7.2
 ```
 
 Replace the ref value with any commit hash.
@@ -80,7 +80,7 @@ If you would like to include more linting rules from the [markdownlint](https://
 ```yml
     steps:
       - name: Check alt text
-        uses: github/accessibility-alt-text-bot@v1.7.1
+        uses: github/accessibility-alt-text-bot@v1.7.2
         with:
           config: |
             no-default-alt-text: true,
@@ -119,8 +119,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/inkblotty"><img src="https://avatars.githubusercontent.com/u/14206003?v=4?s=100" width="100px;" alt="Katie Foster"/><br /><sub><b>Katie Foster</b></sub></a><br /><a href="#ideas-inkblotty" title="Ideas, Planning, & Feedback">🤔</a> <a href="#a11y-inkblotty" title="Accessibility">️️️️♿️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/kendallgassner"><img src="https://avatars.githubusercontent.com/u/15275462?v=4?s=100" width="100px;" alt="Kendall Gassner"/><br /><sub><b>Kendall Gassner</b></sub></a><br /><a href="https://github.com/kendallgassner/accessibility-alt-text-bot/commits?author=kendallgassner" title="Code">💻</a> <a href="#a11y-kendallgassner" title="Accessibility">️️️️♿️</a> <a href="https://github.com/kendallgassner/accessibility-alt-text-bot/commits?author=kendallgassner" title="Documentation">📖</a> <a href="#infra-kendallgassner" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/khiga8"><img src="https://avatars.githubusercontent.com/u/16447748?v=4?s=100" width="100px;" alt="Kate Higa"/><br /><sub><b>Kate Higa</b></sub></a><br /><a href="https://github.com/kendallgassner/accessibility-alt-text-bot/commits?author=khiga8" title="Code">💻</a> <a href="#a11y-khiga8" title="Accessibility">️️️️♿️</a> <a href="https://github.com/kendallgassner/accessibility-alt-text-bot/commits?author=khiga8" title="Documentation">📖</a> <a href="#infra-khiga8" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/HonkingGoose"><img src="https://avatars.githubusercontent.com/u/34918129?v=4?s=100" width="100px;" alt="HonkingGoose"/><br /><sub><b>HonkingGoose</b></sub></a><br /><a href="https://github.com/kendallgassner/accessibility-alt-text-bot/commits?author=HonkingGoose" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/JoshuaKGoldberg"><img src="https://avatars.githubusercontent.com/u/3335181?v=4?s=100" width="100px;" alt="JoshuaKGoldberg"/><br /><sub><b>JoshuaKGoldberg</b></sub></a><br /><a href="https://github.com/kendallgassner/accessibility-alt-text-bot/commits?author=JoshuaKGoldberg" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/HonkingGoose"><img src="https://avatars.githubusercontent.com/u/34918129?v=4?s=100" width="100px;" alt="HonkingGoose"/><br /><sub><b>HonkingGoose</b></sub></a><br /><a href="https://github.com/kendallgassner/accessibility-alt-text-bot/commits?author=HonkingGoose" title="Documentation">📖</a> <a href="#a11y-HonkingGoose" title="Accessibility">️️️️♿️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.nhhousedemcaucus.com/team/rep-eric-gallager"><img src="https://avatars.githubusercontent.com/u/1388660?v=4?s=100" width="100px;" alt="Eric Gallager"/><br /><sub><b>Eric Gallager</b></sub></a><br /><a href="#maintenance-cooljeanius" title="Maintenance">🚧</a> <a href="#ideas-cooljeanius" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
