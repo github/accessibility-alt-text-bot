@@ -4,7 +4,7 @@ This action reminds users to add a meaningful alternative text to their images.
 Alternative text helps users who rely on tools like screen readers, and lowers accessibility barriers.
 
 The action can check:
-
+- d
 - Issue comments
 - Issue descriptions
 - Pull Request comments
