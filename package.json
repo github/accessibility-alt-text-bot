@@ -5,7 +5,7 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "test": "node --experimental-vm-modules ./node_modules/.bin/jest"
+        "test": "vitest run"
     },
     "repository": {
         "type": "git",
@@ -17,13 +17,13 @@
         "url": "https://github.com/github/accessibility-alt-text-bot/issues"
     },
     "homepage": "https://github.com/github/accessibility-alt-text-bot#readme",
-    "devDependencies": {
-        "jest": "^30.4.2"
-    },
     "dependencies": {
         "@github/markdownlint-github": "^0.8.1",
         "js-yaml": "^5.1.0",
         "markdown-it": "^14.2.0",
         "markdownlint": "^0.41.0"
+    },
+    "devDependencies": {
+        "vitest": "^4.1.9"
     }
 }

@@ -1,4 +1,5 @@
 import { validate } from "./validate.js";
+import { expect, test } from "vitest";
 
 test("no-alt-text: should return errors", async () => {
   let result = await validate("![]()");
