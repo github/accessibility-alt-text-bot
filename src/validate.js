@@ -1,11 +1,11 @@
 import markdownIt from "markdown-it";
 import { lint } from "markdownlint/sync";
 import githubMarkdownLint from "@github/markdownlint-github";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 const markdownItFactory = () => markdownIt({ html: true });
 
 export const validate = (markdown, config) => {
-  const configObject = yaml.load(config);
+  const configObject = load(config);
   return (
     lint({
       strings: {
