@@ -18,7 +18,7 @@
     },
     "homepage": "https://github.com/github/accessibility-alt-text-bot#readme",
     "dependencies": {
-        "@github/markdownlint-github": "^0.8.1",
+        "@github/markdownlint-github": "^0.8.2",
         "js-yaml": "^5.1.0",
         "markdown-it": "^14.2.0",
         "markdownlint": "^0.41.0"
