@@ -24,7 +24,7 @@
         "markdownlint": "^0.41.1"
     },
     "devDependencies": {
-        "vitest": "^5.0.0"
+        "vitest": "^5.0.1"
     },
     "overrides": {
         "postcss": "8.5.23"
