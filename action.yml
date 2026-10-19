@@ -100,21 +100,21 @@ runs:
         if [[ $flag && ${{ github.event.action }} != 'deleted' ]]; then
           if [ $bot_comment_id ]; then
             if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
-              gh api repos/${{ github.repository }}/issues/comments/$bot_comment_id -X PATCH -f body="$message"
+              postCommentWithFallback "$message" gh api repos/${{ github.repository }}/issues/comments/$bot_comment_id -X PATCH -f body="$message"
             elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
-              gh api repos/${{ github.repository }}/issues/comments/$bot_comment_id -X PATCH -f body="$message"
+              postCommentWithFallback "$message" gh api repos/${{ github.repository }}/issues/comments/$bot_comment_id -X PATCH -f body="$message"
             elif [[ $type = discussion_description ]] || [[ $type = discussion_comment ]]; then
-              gh api graphql -f  query='mutation($commentId: ID!, $body: String!) { updateDiscussionComment(input: {commentId: $commentId, body: $body}) { comment { id body }}}' -f commentId=$bot_comment_id -f body="$message"
+              postCommentWithFallback "$message" gh api graphql -f  query='mutation($commentId: ID!, $body: String!) { updateDiscussionComment(input: {commentId: $commentId, body: $body}) { comment { id body }}}' -f commentId=$bot_comment_id -f body="$message"
             fi
           else 
             if [[ $type = pr_comment ]] || [[ $type = pr_description ]]; then
-              gh pr comment $issue_url --body "$message"
+              postCommentWithFallback "$message" gh pr comment $issue_url --body "$message"
             elif [[ $type = issue_comment ]] || [[ $type = issue_description ]]; then
-              gh issue comment $issue_url --body "$message"
+              postCommentWithFallback "$message" gh issue comment $issue_url --body "$message"
             elif [[ $type = discussion_description ]]; then
-              addDiscussionComment $discussion_node_id "$message"
+              postCommentWithFallback "$message" addDiscussionComment $discussion_node_id "$message"
             elif [[ $type = discussion_comment ]]; then
-              addDiscussionComment $discussion_node_id "$message" $reply_to_id 
+              postCommentWithFallback "$message" addDiscussionComment $discussion_node_id "$message" $reply_to_id
             fi
           fi
         else 
