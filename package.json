@@ -21,10 +21,10 @@
         "@github/markdownlint-github": "^0.8.5",
         "js-yaml": "^5.5.0",
         "markdown-it": "^15.0.3",
-        "markdownlint": "^0.42.0"
+        "markdownlint": "^0.42.1"
     },
     "devDependencies": {
-        "vitest": "^5.0.5"
+        "vitest": "^5.1.0"
     },
     "overrides": {
         "postcss": "8.5.23"
