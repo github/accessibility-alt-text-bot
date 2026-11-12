@@ -28,6 +28,8 @@ This action flags when the alt text has not been updated from the default:
 
 Copy this workflow into any repo you want the `accessibility-alt-text-bot` to run in:
 
+The action sets up Node.js 22.12.0 automatically to meet its runtime requirements.
+
 ```yml
 name: Accessibility-alt-text-bot
 on:
