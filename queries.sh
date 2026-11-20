@@ -1,5 +1,42 @@
 #!/bin/bash
 
+# Runs a comment command and falls back to the log and job summary when a fork token cannot write comments.
+function postCommentWithFallback() {
+  local MESSAGE=$1
+  shift
+
+  local OUTPUT
+  local EXIT_CODE
+
+  if OUTPUT=$("$@" 2>&1); then
+    if [ -n "$OUTPUT" ]; then
+      printf '%s\n' "$OUTPUT"
+    fi
+    return 0
+  else
+    EXIT_CODE=$?
+  fi
+
+  if [[ "$OUTPUT" == *"Resource not accessible by integration"* ]]; then
+    printf '%s\n' "::warning::Unable to post the accessibility alt text comment because the workflow token cannot write comments. The message is included below and in the job summary."
+    printf '\n%s\n' "$MESSAGE"
+
+    if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+      {
+        printf '# Accessibility alt text bot\n\n'
+        printf '%s\n' "$MESSAGE"
+      } >> "$GITHUB_STEP_SUMMARY"
+    fi
+
+    return 0
+  fi
+
+  if [ -n "$OUTPUT" ]; then
+    printf '%s\n' "$OUTPUT" >&2
+  fi
+  return "$EXIT_CODE"
+}
+
 # Given a node_id for a discussion comment that is a reply in thread, return the parent comment's node ID.
 function getDiscussionReplyToId() {
   local NODE_ID=$1
@@ -33,7 +70,7 @@ function addDiscussionComment() {
       }
     '
   else
-    gh api graphql -F discussionId="$discussion_node_id" -F body="$message" -f query='
+    gh api graphql -F discussionId="$DISCUSSION_NODE_ID" -F body="$MESSAGE" -f query='
       mutation($discussionId: ID!, $body: String!) {
         addDiscussionComment(input: {discussionId: $discussionId, body: $body}) {
           comment {
